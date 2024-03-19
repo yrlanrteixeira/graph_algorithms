@@ -86,4 +86,14 @@ public class GrafoMatrizAdjacencia implements Grafo {
         return getAdjacentes(vertice, true);
     }
 
+    public int getGrau(int vertice) {
+        int grau = 0;
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (matrizAdjacencia[vertice][i]) {
+                grau++;
+            }
+        }
+        return grau;
+    }
+
 }

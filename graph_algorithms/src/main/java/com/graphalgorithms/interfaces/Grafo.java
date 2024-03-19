@@ -11,4 +11,8 @@ public interface Grafo {
     List<Integer> getVizinhos(int vertice);
     List<Integer> getSucessores(int vertice);
     List<Integer> getPredecessores(int vertice);
+    int getGrau(int vertice);
+
+
+
 }
