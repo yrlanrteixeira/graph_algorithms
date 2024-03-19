@@ -86,14 +86,22 @@ public class GrafoMatrizAdjacencia implements Grafo {
         return getAdjacentes(vertice, true);
     }
 
-    public int getGrau(int vertice) {
-        int grau = 0;
+    public int[] getGrau(int vertice) {
+        int grauEntrada = 0;
+        int grauSaida = 0;
         for (int i = 0; i < numeroDeVertices; i++) {
+            if (matrizAdjacencia[i][vertice]) {
+                grauEntrada++;
+            }
             if (matrizAdjacencia[vertice][i]) {
-                grau++;
+                grauSaida++;
             }
         }
-        return grau;
+        if (isDirecionado) {
+            return new int[]{grauEntrada, grauSaida};
+        } else {
+            return new int[]{grauEntrada + grauSaida};
+        }
     }
 
 }
