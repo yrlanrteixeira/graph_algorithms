@@ -28,7 +28,8 @@ public class GrafoApplication {
             System.out.println("7. Teste de grafo regular");
             System.out.println("8. Teste de grafo completo");
             System.out.println("9. Teste de grafo bipartido");
-            System.out.println("10. Sair");
+            System.out.println("10. Imprimir grafo");
+            System.out.println("11. Sair");
             int opcao = scanner.nextInt();
 
             switch (opcao) {
@@ -109,6 +110,10 @@ public class GrafoApplication {
                     break;
 
                 case 10:
+                    grafoLista.imprimeGrafo();
+                    break;
+
+                case 11:
                     continuar = false;
                     break;
                 default:
