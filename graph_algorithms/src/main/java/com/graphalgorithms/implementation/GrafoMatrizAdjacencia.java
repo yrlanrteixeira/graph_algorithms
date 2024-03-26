@@ -74,6 +74,7 @@ public class GrafoMatrizAdjacencia implements Grafo {
         }
         return adjacentes;
     }
+
     public List<Integer> getVizinhos(int vertice) {
         return getAdjacentes(vertice, false);
     }
@@ -98,10 +99,9 @@ public class GrafoMatrizAdjacencia implements Grafo {
             }
         }
         if (isDirecionado) {
-            return new int[]{grauEntrada, grauSaida};
+            return new int[] { grauEntrada, grauSaida };
         } else {
-            return new int[]{grauEntrada + grauSaida};
+            return new int[] { grauEntrada + grauSaida };
         }
     }
-
 }
