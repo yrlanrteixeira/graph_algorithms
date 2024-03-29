@@ -111,6 +111,7 @@ public class GrafoApplication {
 
                 case 10:
                     grafoLista.imprimeGrafo();
+                    grafo.imprimeGrafo();
                     break;
 
                 case 11:

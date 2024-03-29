@@ -154,7 +154,7 @@ public class GrafoListaAdjacencia implements Grafo {
 
         for (int i = 0; i < numeroDeVertices; i++) {
             if (cor[i] == -1) {
-                if (isBipartiteUtil(i, cor))
+                if (!isBipartiteUtil(i, cor))
                     return false;
             }
         }
