@@ -178,12 +178,14 @@ public class GrafoListaAdjacencia implements Grafo {
     }
 
     public void imprimeGrafo() {
+        System.out.println("Lista de Adjacência: \n");
         for (int i = 0; i < numeroDeVertices; i++) {
-            System.out.print("Vértice " + i + " está conectado a: ");
+            System.out.print(i + " --> ");
             for (Integer n : listaAdjacencia[i])
-                System.out.print(" " + n);
+                System.out.print("|" + n);
             System.out.println();
         }
+        System.out.println("\n");
     }
 
 }

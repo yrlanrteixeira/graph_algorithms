@@ -2,8 +2,6 @@ package main.java.com.graphalgorithms.implementation;
 
 import main.java.com.graphalgorithms.interfaces.Grafo;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.*;
 
 public class GrafoMatrizAdjacencia implements Grafo {
@@ -183,12 +181,22 @@ public class GrafoMatrizAdjacencia implements Grafo {
     }
 
     public void imprimeGrafo() {
-        System.out.println("Matriz de Adjacência: ");
+        System.out.println("Matriz de Adjacência: \n");
+        for (int colunas = -1; colunas < numeroDeVertices; colunas++) {
+            if (colunas == -1) {
+                System.out.print("   ");
+            } else
+                System.out.print("V" + colunas + " ");
+        }
+        System.out.println(" ");
         for (int i = 0; i < numeroDeVertices; i++) {
+            System.out.print("V" + i + "  ");
             for (int j = 0; j < numeroDeVertices; j++) {
-                System.out.print(matrizAdjacencia[i][j] ? 1 + " " : 0 + " ");
+                System.out.print(matrizAdjacencia[i][j] ? 1 + "  " : 0 + "  ");
             }
             System.out.println(" ");
         }
+
+        System.out.println("\n");
     }
 }

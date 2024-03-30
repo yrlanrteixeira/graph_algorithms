@@ -9,62 +9,104 @@ public class GrafoApplication {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Digite o número de vértices do grafo: ");
         int numeroDeVertices = scanner.nextInt();
         System.out.println("O grafo é direcionado? (true/false): ");
         boolean isDirecionado = scanner.nextBoolean();
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(numeroDeVertices, isDirecionado);
         GrafoListaAdjacencia grafoLista = new GrafoListaAdjacencia(numeroDeVertices, isDirecionado);
+        int origem, destino = 0;
 
         boolean continuar = true;
         while (continuar) {
-            System.out.println("Escolha uma opção:");
-            System.out.println("1. Adicionar aresta");
-            System.out.println("2. Obter vizinhos de um vértice");
-            System.out.println("3. Obter sucessores de um vértice");
-            System.out.println("4. Obter predecessores de um vértice");
-            System.out.println("5. Obter grau de um vértice");
-            System.out.println("6. Teste de grafo simples");
-            System.out.println("7. Teste de grafo regular");
-            System.out.println("8. Teste de grafo completo");
-            System.out.println("9. Teste de grafo bipartido");
-            System.out.println("10. Imprimir grafo");
-            System.out.println("11. Sair");
+            System.out.println("##----------------------------- MENU -----------------------------##");
+            System.out.println("|                                                                  |");
+            System.out.println("| 1. Adicionar aresta                                              |");
+            System.out.println("| 2. Remover aresta                                                |");
+            System.out.println("| 3. Vizinhança de um vértice (Grafo NÃO Direcionado)              |");
+            System.out.println("| 4. Sucessores e predecessores de um vértice (Grafo Direcionado)  |");
+            System.out.println("| 5. Grau de um vértice                                            |");
+            System.out.println("| 6. Informações do grafo (Simples, Regular, Completo e Bipartido) |");
+            System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |");
+            System.out.println("| 8. Sair                                                          |");
+            System.out.println("|                                                                  |");
+            System.out.println("##----------------------------------------------------------------##\n");
+            System.out.print("Digite o número de uma opção: ");
             int opcao = scanner.nextInt();
 
             switch (opcao) {
+                // ADICIONAR ARESTA
                 case 1:
-                    System.out.println("Digite a origem da aresta: ");
-                    int origem = scanner.nextInt();
-                    System.out.println("Digite o destino da aresta: ");
-                    int destino = scanner.nextInt();
-                    grafo.adicionarAresta(origem, destino);
-                    grafoLista.adicionarAresta(origem, destino);
+                    System.out.println("| 1. Adicionar aresta                                              |\n");
+                    System.out.print("Digite o vértice de origem da aresta: ");
+                    origem = scanner.nextInt();
+                    System.out.print("Digite o vértice de destino da aresta: ");
+                    destino = scanner.nextInt();
+
+                    if (grafo.adicionarAresta(origem, destino) && grafoLista.adicionarAresta(origem, destino)) {
+                        System.out.println("Aresta adicionada!\n");
+                    } else if (!grafo.adicionarAresta(origem, destino)
+                            && !grafoLista.adicionarAresta(origem, destino)) {
+                        System.out.println(
+                                "NÃO foi possível adicionar a aresta! Verifique os vértices de origem e destino!\n");
+                    }
                     break;
+
+                // REMOVER ARESTA
                 case 2:
-                    System.out.println("Digite o vértice para obter os vizinhos: ");
-                    int vertice = scanner.nextInt();
-                    System.out.println("Vizinhos do vértice " + vertice + ": " + grafo.getVizinhos(vertice));
-                    System.out.println("(Lista Adjacência) Vizinhos do vértice " + vertice + ": "
-                            + grafoLista.getVizinhos(vertice));
+                    System.out.println("| 2. Remover aresta                                                |\n");
+                    System.out.print("Digite o vértice de origem da aresta: ");
+                    origem = scanner.nextInt();
+                    System.out.print("Digite o vértice de destino da aresta: ");
+                    destino = scanner.nextInt();
+
+                    if (grafo.removerAresta(origem, destino) && grafoLista.removerAresta(origem, destino)) {
+                        System.out.println("Aresta removida!\n");
+                    } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
+                        System.out.println(
+                                "NÃO foi possível remover a aresta, verifique os vértices de origem e destino!");
+                    }
+
                     break;
+
+                // VIZINHANÇA DO VÉRTICE
                 case 3:
-                    System.out.println("Digite o vértice para obter os sucessores: ");
-                    vertice = scanner.nextInt();
-                    System.out.println("Sucessores do vértice " + vertice + ": " + grafo.getSucessores(vertice));
-                    System.out.println("(Lista Adjacência) Sucessores do vértice " + vertice + ": "
-                            + grafoLista.getSucessores(vertice));
+                    if (!isDirecionado) {
+                        System.out.print("Digite o número do vértice para obter sua vizinhança: ");
+                        int vertice = scanner.nextInt();
+                        System.out.println("(Matriz de Adjacência) Vizinhos do vértice " + vertice + ": "
+                                + grafo.getVizinhos(vertice));
+                        System.out.println("(Lista de Adjacência) Vizinhos do vértice " + vertice + ": "
+                                + grafoLista.getVizinhos(vertice));
+                    } else {
+                        System.out.println("O Grafo é direcionado!");
+                    }
                     break;
+
+                // SUCESSORES E PREDECESSORES
                 case 4:
-                    System.out.println("Digite o vértice para obter os predecessores: ");
-                    vertice = scanner.nextInt();
-                    System.out.println("Predecessores do vértice " + vertice + ": " + grafo.getPredecessores(vertice));
-                    System.out.println("(Lista Adjacência) Predecessores do vértice " + vertice + ": "
-                            + grafo.getPredecessores(vertice));
+                    if (isDirecionado) {
+                        System.out.print("Digite o número do vértice para obter os sucessores e predecessores: ");
+                        int vertice = scanner.nextInt();
+                        System.out.println("(Matriz de Adjacência) Sucessores do vértice " + vertice + ": "
+                                + grafo.getSucessores(vertice));
+                        System.out.println("(Lista Adjacência) Sucessores do vértice " + vertice + ": "
+                                + grafoLista.getSucessores(vertice));
+                        System.out.println("\n");
+                        System.out.println("(Matriz de Adjacência) Predecessores do vértice " + vertice + ": "
+                                + grafo.getPredecessores(vertice));
+                        System.out.println("(Lista Adjacência) Predecessores do vértice " + vertice + ": "
+                                + grafoLista.getPredecessores(vertice));
+                    } else {
+                        System.out.println("O Grafo é NÃO direcionado!");
+                    }
                     break;
+
+                // GRAU DE UM VÉRTICE
                 case 5:
                     System.out.println("Digite o vértice para obter o grau: ");
-                    vertice = scanner.nextInt();
+                    int vertice = scanner.nextInt();
                     int[] graus = grafo.getGrau(vertice);
                     int[] grausLista = grafoLista.getGrau(vertice);
                     if (graus.length == 1) {
@@ -77,46 +119,47 @@ public class GrafoApplication {
                     System.out.println("Grau do vértice " + vertice + ": " + grausLista[0]);
                     break;
 
+                // INFORMAÇÕES DO GRAFO
                 case 6:
-                    if (grafoLista.isSimples()) {
-                        System.out.println("O grafo é Simples!");
-                    } else {
-                        System.out.println("O grafo NÃO é simples!");
-                    }
+                    System.out.println("| 6. Informações do grafo (Simples, Regular, Completo e Bipartido) |\n");
+
+                    System.out.print("Simples? ");
+                    if (grafoLista.isSimples() && grafo.isSimples())
+                        System.out.println(" SIM! ");
+                    else if (!grafoLista.isSimples() && !grafo.isSimples())
+                        System.out.println(" NÃO! ");
+
+                    System.out.print("Regular? ");
+                    if (grafoLista.isRegular() && grafo.isRegular())
+                        System.out.println(" SIM! ");
+                    else if (!grafoLista.isRegular() && !grafo.isRegular())
+                        System.out.println(" NÃO! ");
+
+                    System.out.print("Completo? ");
+                    if (grafoLista.isCompleto() && grafo.isCompleto())
+                        System.out.println(" SIM! ");
+                    else if (!grafoLista.isCompleto() && !grafo.isCompleto())
+                        System.out.println(" NÃO! ");
+
+                    System.out.print("Bipartido? ");
+                    if (grafoLista.isBipartido() && grafo.isBipartido())
+                        System.out.println(" SIM! ");
+                    else if (!grafoLista.isBipartido() && !grafo.isBipartido())
+                        System.out.println(" NÃO! ");
+
                     break;
 
+                // IMPRIMIR GRAFO
                 case 7:
-                    if (grafoLista.isRegular()) {
-                        System.out.println("O grafo é Regular!");
-                    } else {
-                        System.out.println("O grafo NÃO é Regular!");
-                    }
-                    break;
-
-                case 8:
-                    if (grafoLista.isCompleto()) {
-                        System.out.println("O grafo é Completo!");
-                    } else {
-                        System.out.println("O grafo NÃO é Completo!");
-                    }
-                    break;
-
-                case 9:
-                    if (grafoLista.isBipartido()) {
-                        System.out.println("O grafo é Bipartido!");
-                    } else {
-                        System.out.println("O grafo NÃO é Bipartido!");
-                    }
-                    break;
-
-                case 10:
                     grafoLista.imprimeGrafo();
                     grafo.imprimeGrafo();
                     break;
 
-                case 11:
+                // SAIR
+                case 8:
                     continuar = false;
                     break;
+
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
