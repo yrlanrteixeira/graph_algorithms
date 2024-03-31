@@ -2,25 +2,28 @@ package main.java.com.graphalgorithms.application;
 
 import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
 import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
-
 import java.util.Scanner;
 
 public class GrafoApplication {
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("##------------------------- ATIVIDADE #1 -------------------------##");
+        System.out.println("|                                                                  |");
+        System.out.println("| Essa atividade é uma representação de grafos utilizando matriz   |");
+        System.out.println("| de Adjacência e Lista de Adjacência.                             |");
+        System.out.println("|                                                                  |");
+        System.out.println("##----------------------------------------------------------------##\n");
 
-        System.out.println("Digite o número de vértices do grafo: ");
+        System.out.print("--> Digite o número de vértices do grafo: ");
         int numeroDeVertices = scanner.nextInt();
-        System.out.println("O grafo é direcionado? (true/false): ");
+        System.out.print("--> O grafo é direcionado? (true/false): ");
         boolean isDirecionado = scanner.nextBoolean();
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(numeroDeVertices, isDirecionado);
         GrafoListaAdjacencia grafoLista = new GrafoListaAdjacencia(numeroDeVertices, isDirecionado);
         int origem, destino = 0;
-
         boolean continuar = true;
         while (continuar) {
-            System.out.println("##----------------------------- MENU -----------------------------##");
+            System.out.println("\n##----------------------------- MENU -----------------------------##");
             System.out.println("|                                                                  |");
             System.out.println("| 1. Adicionar aresta                                              |");
             System.out.println("| 2. Remover aresta                                                |");
@@ -32,20 +35,20 @@ public class GrafoApplication {
             System.out.println("| 8. Sair                                                          |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
-            System.out.print("Digite o número de uma opção: ");
+            System.out.print("--> Digite o número de uma opção: ");
             int opcao = scanner.nextInt();
 
             switch (opcao) {
                 // ADICIONAR ARESTA
                 case 1:
                     System.out.println("| 1. Adicionar aresta                                              |\n");
-                    System.out.print("Digite o vértice de origem da aresta: ");
+                    System.out.print("--> Digite o vértice de origem da aresta: ");
                     origem = scanner.nextInt();
-                    System.out.print("Digite o vértice de destino da aresta: ");
+                    System.out.print("--> Digite o vértice de destino da aresta: ");
                     destino = scanner.nextInt();
 
                     if (grafo.adicionarAresta(origem, destino) && grafoLista.adicionarAresta(origem, destino)) {
-                        System.out.println("Aresta adicionada!\n");
+                        System.out.println("\nAresta adicionada!\n");
                     } else if (!grafo.adicionarAresta(origem, destino)
                             && !grafoLista.adicionarAresta(origem, destino)) {
                         System.out.println(
@@ -56,13 +59,13 @@ public class GrafoApplication {
                 // REMOVER ARESTA
                 case 2:
                     System.out.println("| 2. Remover aresta                                                |\n");
-                    System.out.print("Digite o vértice de origem da aresta: ");
+                    System.out.print("--> Digite o vértice de origem da aresta: ");
                     origem = scanner.nextInt();
-                    System.out.print("Digite o vértice de destino da aresta: ");
+                    System.out.print("--> Digite o vértice de destino da aresta: ");
                     destino = scanner.nextInt();
 
                     if (grafo.removerAresta(origem, destino) && grafoLista.removerAresta(origem, destino)) {
-                        System.out.println("Aresta removida!\n");
+                        System.out.println("\nAresta removida!\n");
                     } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
                         System.out.println(
                                 "NÃO foi possível remover a aresta, verifique os vértices de origem e destino!");
@@ -72,8 +75,9 @@ public class GrafoApplication {
 
                 // VIZINHANÇA DO VÉRTICE
                 case 3:
+                    System.out.println("| 3. Vizinhança de um vértice (Grafo NÃO Direcionado)              |\n");
                     if (!isDirecionado) {
-                        System.out.print("Digite o número do vértice para obter sua vizinhança: ");
+                        System.out.print("--> Digite o número do vértice para obter sua vizinhança: ");
                         int vertice = scanner.nextInt();
                         System.out.println("(Matriz de Adjacência) Vizinhos do vértice " + vertice + ": "
                                 + grafo.getVizinhos(vertice));
@@ -86,8 +90,9 @@ public class GrafoApplication {
 
                 // SUCESSORES E PREDECESSORES
                 case 4:
+                    System.out.println("| 4. Sucessores e predecessores de um vértice (Grafo Direcionado)  |\n");
                     if (isDirecionado) {
-                        System.out.print("Digite o número do vértice para obter os sucessores e predecessores: ");
+                        System.out.print("--> Digite o número do vértice para obter os sucessores e predecessores: ");
                         int vertice = scanner.nextInt();
                         System.out.println("(Matriz de Adjacência) Sucessores do vértice " + vertice + ": "
                                 + grafo.getSucessores(vertice));
@@ -105,7 +110,8 @@ public class GrafoApplication {
 
                 // GRAU DE UM VÉRTICE
                 case 5:
-                    System.out.println("Digite o vértice para obter o grau: ");
+                    System.out.println("| 5. Grau de um vértice                                            |\n");
+                    System.out.print("--> Digite o vértice para obter o grau: ");
                     int vertice = scanner.nextInt();
                     int[] graus = grafo.getGrau(vertice);
                     int[] grausLista = grafoLista.getGrau(vertice);
@@ -151,8 +157,9 @@ public class GrafoApplication {
 
                 // IMPRIMIR GRAFO
                 case 7:
-                    grafoLista.imprimeGrafo();
-                    grafo.imprimeGrafo();
+                    System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |\n");
+                    grafo.imprimeGrafo(); // Matriz de Adjacência
+                    grafoLista.imprimeGrafo(); // Lista de Adjacência
                     break;
 
                 // SAIR
