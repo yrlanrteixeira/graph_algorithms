@@ -2,8 +2,7 @@ package main.java.com.graphalgorithms.implementation;
 
 import main.java.com.graphalgorithms.interfaces.Grafo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GrafoMatrizAdjacencia implements Grafo {
     private boolean[][] matrizAdjacencia;
@@ -74,6 +73,7 @@ public class GrafoMatrizAdjacencia implements Grafo {
         }
         return adjacentes;
     }
+
     public List<Integer> getVizinhos(int vertice) {
         return getAdjacentes(vertice, false);
     }
@@ -98,10 +98,105 @@ public class GrafoMatrizAdjacencia implements Grafo {
             }
         }
         if (isDirecionado) {
-            return new int[]{grauEntrada, grauSaida};
+            return new int[] { grauEntrada, grauSaida };
         } else {
-            return new int[]{grauEntrada + grauSaida};
+            return new int[] { grauEntrada + grauSaida };
         }
     }
 
+    public boolean isSimples() {
+        // Verifica se há laços ou múltiplas arestas
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (matrizAdjacencia[i][i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isRegular() {
+        int[] grau = getGrau(0);
+
+        for (int i = 1; i < numeroDeVertices; i++) {
+            if (getGrau(i) != grau) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isCompleto() {
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (i != j && matrizAdjacencia[i][j] != true) {
+                    return false;
+                }
+                if (i == j && matrizAdjacencia[i][j] != false) {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isBipartiteUtil(int[] cores, int inicio) {
+        Queue<Integer> fila = new LinkedList<>();
+        fila.offer(inicio);
+        cores[inicio] = 0;
+
+        while (!fila.isEmpty()) {
+            int vertice = fila.poll();
+
+            for (int vizinho = 0; vizinho < matrizAdjacencia.length; vizinho++) {
+                if (matrizAdjacencia[vertice][vizinho] == true) {
+                    if (cores[vizinho] == -1) {
+                        cores[vizinho] = 1 - cores[vertice];
+                        fila.offer(vizinho);
+                    } else if (cores[vizinho] == cores[vertice]) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isBipartido() {
+        int[] cores = new int[numeroDeVertices];
+        Arrays.fill(cores, -1);
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (cores[i] == -1) {
+                if (!isBipartiteUtil(cores, i)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void imprimeGrafo() {
+        System.out.println("Matriz de Adjacência: \n");
+        for (int colunas = -1; colunas < numeroDeVertices; colunas++) {
+            if (colunas == -1) {
+                System.out.print("   ");
+            } else
+                System.out.print("V" + colunas + " ");
+        }
+        System.out.println(" ");
+        for (int i = 0; i < numeroDeVertices; i++) {
+            System.out.print("V" + i + "  ");
+            for (int j = 0; j < numeroDeVertices; j++) {
+                System.out.print(matrizAdjacencia[i][j] ? 1 + "  " : 0 + "  ");
+            }
+            System.out.println(" ");
+        }
+
+        System.out.println("\n");
+    }
 }
