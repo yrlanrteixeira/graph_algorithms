@@ -2,6 +2,7 @@ package main.java.com.graphalgorithms.application;
 
 import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
 import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
+import main.java.com.graphalgorithms.implementation.BuscaLargura;
 import java.util.Scanner;
 
 public class GrafoApplication {
@@ -160,6 +161,8 @@ public class GrafoApplication {
                     System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |\n");
                     grafo.imprimeGrafo(); // Matriz de Adjacência
                     grafoLista.imprimeGrafo(); // Lista de Adjacência
+                    BuscaLargura bfs = new BuscaLargura(grafoLista);
+                    bfs.buscaLargura(0);
                     break;
 
                 // SAIR

@@ -169,7 +169,7 @@ public class GrafoListaAdjacencia implements Grafo {
 
     @Override
     public int getNumeroDeVertices() {
-        return 0;
+        return numeroDeVertices;
     }
 
     @Override
