@@ -3,6 +3,7 @@ package main.java.com.graphalgorithms.application;
 import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
 import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
 import main.java.com.graphalgorithms.implementation.BuscaLargura;
+import main.java.com.graphalgorithms.implementation.BuscaProfundidade;
 import java.util.Scanner;
 
 public class GrafoApplication {
@@ -33,7 +34,9 @@ public class GrafoApplication {
             System.out.println("| 5. Grau de um vértice                                            |");
             System.out.println("| 6. Informações do grafo (Simples, Regular, Completo e Bipartido) |");
             System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |");
-            System.out.println("| 8. Sair                                                          |");
+            System.out.println("| 8. Busca por largura                                             |");
+            System.out.println("| 9. Busca por Profundidade                                        |");
+            System.out.println("| 10. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -161,12 +164,31 @@ public class GrafoApplication {
                     System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |\n");
                     grafo.imprimeGrafo(); // Matriz de Adjacência
                     grafoLista.imprimeGrafo(); // Lista de Adjacência
+                    break;
+
+                // BUSCA POR LARGURA
+                case 8:
+                    System.out.println("| 8. Busca por largura                                             |");
                     BuscaLargura bfs = new BuscaLargura(grafoLista);
                     bfs.buscaLargura(0);
                     break;
 
+                // BUSCA POR PROFUNDIDADE
+                case 9:
+                    System.out.println("| 9. Busca por Profundidade                                        |");
+                    System.out.print("--> Digite o vértice inicial: ");
+                    int verticeInicial = scanner.nextInt();
+
+                    if (verticeInicial < 0 || verticeInicial >= grafoLista.getNumeroDeVertices()) {
+                        System.out.println("[ERROR]: O vértice digitado não existe!");
+                    } else {
+                        BuscaProfundidade.buscaProfundidade(grafoLista, verticeInicial);
+                    }
+
+                    break;
+
                 // SAIR
-                case 8:
+                case 10:
                     continuar = false;
                     break;
 

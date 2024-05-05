@@ -5,11 +5,9 @@ import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
 
 public class BuscaLargura {
     private GrafoListaAdjacencia grafoLista;
-    // private boolean[] visitado;
 
     public BuscaLargura(GrafoListaAdjacencia grafoLista) {
         this.grafoLista = grafoLista;
-        // this.visitado = new boolean[grafoLista.getNumeroDeVertices()];
     }
 
     public void buscaLargura(int verticeInicial) {
