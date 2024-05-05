@@ -4,6 +4,8 @@ import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
 import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
 import main.java.com.graphalgorithms.implementation.BuscaLargura;
 import main.java.com.graphalgorithms.implementation.BuscaProfundidade;
+import main.java.com.graphalgorithms.implementation.GrafoConexo;
+
 import java.util.Scanner;
 
 public class GrafoApplication {
@@ -36,7 +38,8 @@ public class GrafoApplication {
             System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |");
             System.out.println("| 8. Busca por largura                                             |");
             System.out.println("| 9. Busca por Profundidade                                        |");
-            System.out.println("| 10. Sair                                                         |");
+            System.out.println("| 10. Teste grafo conexo                                           |");
+            System.out.println("| 11. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -187,8 +190,20 @@ public class GrafoApplication {
 
                     break;
 
-                // SAIR
+                // TESTE DE GRAFO CONEXO
                 case 10:
+                    System.out.println("| 10. Teste grafo conexo                                           |");
+
+                    if (GrafoConexo.testeGrafoConexo(grafoLista)) {
+                        System.out.println("O grafo é conexo !");
+                    } else {
+                        System.out.println("O grafo NÃO é conexo !");
+                    }
+
+                    break;
+
+                // SAIR
+                case 11:
                     continuar = false;
                     break;
 
