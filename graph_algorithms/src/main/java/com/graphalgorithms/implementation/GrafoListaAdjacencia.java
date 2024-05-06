@@ -4,9 +4,9 @@ import main.java.com.graphalgorithms.interfaces.Grafo;
 import java.util.*;
 
 public class GrafoListaAdjacencia implements Grafo {
-    private int numeroDeVertices;
-    private boolean isDirecionado;
-    private LinkedList<Integer> listaAdjacencia[];
+    private final int numeroDeVertices;
+    private final boolean isDirecionado;
+    private final LinkedList<Integer>[] listaAdjacencia;
 
     /**
      * Construtor do grafo de adjacência
@@ -21,7 +21,7 @@ public class GrafoListaAdjacencia implements Grafo {
         this.listaAdjacencia = new LinkedList[numeroDeVertices];
 
         for (int i = 0; i < numeroDeVertices; i++) {
-            listaAdjacencia[i] = new LinkedList();
+            listaAdjacencia[i] = new LinkedList<>();
         }
     }
 
@@ -81,7 +81,7 @@ public class GrafoListaAdjacencia implements Grafo {
 
     @Override
     public int[] getGrau(int vertice) {
-        if (listaAdjacencia[vertice].size() == 0)
+        if (listaAdjacencia[vertice].isEmpty())
             return new int[] { 0 };
 
         if (isDirecionado) {
@@ -164,7 +164,6 @@ public class GrafoListaAdjacencia implements Grafo {
 
     @Override
     public void adicionarVertice() {
-        return;
     }
 
     @Override

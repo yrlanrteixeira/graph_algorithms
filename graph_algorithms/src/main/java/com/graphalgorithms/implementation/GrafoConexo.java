@@ -17,7 +17,6 @@ public class GrafoConexo {
 
         return true;
     }
-
     private static void dfs(GrafoListaAdjacencia grafo, int vertice, boolean[] visitado) {
         visitado[vertice] = true;
 

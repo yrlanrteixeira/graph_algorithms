@@ -24,7 +24,7 @@ public class GrafoApplication {
         boolean isDirecionado = scanner.nextBoolean();
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(numeroDeVertices, isDirecionado);
         GrafoListaAdjacencia grafoLista = new GrafoListaAdjacencia(numeroDeVertices, isDirecionado);
-        int origem, destino = 0;
+        int origem, destino;
         boolean continuar = true;
         while (continuar) {
             System.out.println("\n##----------------------------- MENU -----------------------------##");

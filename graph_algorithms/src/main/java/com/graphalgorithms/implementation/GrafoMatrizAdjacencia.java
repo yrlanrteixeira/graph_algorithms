@@ -7,7 +7,7 @@ import java.util.*;
 public class GrafoMatrizAdjacencia implements Grafo {
     private boolean[][] matrizAdjacencia;
     private int numeroDeVertices;
-    private boolean isDirecionado;
+    private final boolean isDirecionado;
 
     public GrafoMatrizAdjacencia(int numeroDeVertices, boolean isDirecionado) {
         this.numeroDeVertices = numeroDeVertices;
@@ -130,10 +130,10 @@ public class GrafoMatrizAdjacencia implements Grafo {
     public boolean isCompleto() {
         for (int i = 0; i < numeroDeVertices; i++) {
             for (int j = 0; j < numeroDeVertices; j++) {
-                if (i != j && matrizAdjacencia[i][j] != true) {
+                if (i != j && !matrizAdjacencia[i][j]) {
                     return false;
                 }
-                if (i == j && matrizAdjacencia[i][j] != false) {
+                if (i == j && matrizAdjacencia[i][j]) {
                     return false;
                 }
             }
@@ -151,7 +151,7 @@ public class GrafoMatrizAdjacencia implements Grafo {
             int vertice = fila.poll();
 
             for (int vizinho = 0; vizinho < matrizAdjacencia.length; vizinho++) {
-                if (matrizAdjacencia[vertice][vizinho] == true) {
+                if (matrizAdjacencia[vertice][vizinho]) {
                     if (cores[vizinho] == -1) {
                         cores[vizinho] = 1 - cores[vertice];
                         fila.offer(vizinho);
