@@ -1,9 +1,13 @@
 package main.java.com.graphalgorithms.implementation;
 
-import main.java.com.graphalgorithms.interfaces.Grafo;
-import java.util.*;
+import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
 
-public class GrafoListaAdjacencia implements Grafo {
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class GrafoListaAdjacencia extends GrafoAbstrato {
     private final int numeroDeVertices;
     private final boolean isDirecionado;
     private final LinkedList<Integer>[] listaAdjacencia;
