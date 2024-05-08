@@ -1,11 +1,10 @@
 package main.java.com.graphalgorithms.application;
 
-import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
-import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
-import main.java.com.graphalgorithms.implementation.BuscaLargura;
-import main.java.com.graphalgorithms.implementation.BuscaProfundidade;
-import main.java.com.graphalgorithms.implementation.GrafoConexo;
+import main.java.com.graphalgorithms.implementation.*;
+import main.java.com.graphalgorithms.utils.Aresta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GrafoApplication {
@@ -39,7 +38,11 @@ public class GrafoApplication {
             System.out.println("| 8. Busca por largura                                             |");
             System.out.println("| 9. Busca por Profundidade                                        |");
             System.out.println("| 10. Teste grafo conexo                                           |");
-            System.out.println("| 11. Sair                                                         |");
+            System.out.println("| 11. Ordenação Topológica                                         |");
+            System.out.println("| 12. Árvore Geradora Mínima (Prim)                                |");
+            System.out.println("| 13. Árvore Geradora Mínima (Kruskal)                             |");
+            System.out.println("| 14. Caminho mínimo entre dois vértices (Dijkstra)                |");
+            System.out.println("| 15. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -194,21 +197,53 @@ public class GrafoApplication {
                 case 10:
                     System.out.println("| 10. Teste grafo conexo                                           |");
 
-                    if (GrafoConexo.testeGrafoConexo(grafoLista)) {
+                    if (GrafoConexo.isConexo(grafoLista)) {
                         System.out.println("O grafo é conexo !");
                     } else {
                         System.out.println("O grafo NÃO é conexo !");
                     }
 
                     break;
-
-                // SAIR
                 case 11:
+                    // IMPLEMENTAÇÃO DA ORDENAÇÃO TOPOLÓGICA
+                    OrdenacaoTopologica ordenacaoTopologica = new OrdenacaoTopologica(grafoLista);
+                    System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+                    break;
+                case 12:
+                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (PRIM)
+                    int[][] matrizAdjacencia = new int[grafoLista.getNumeroDeVertices()][grafoLista.getNumeroDeVertices()];
+                    // PREENCHA A MATRIZ DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
+                    Prim prim = new Prim(grafoLista.getNumeroDeVertices(), matrizAdjacencia);
+                    Aresta[] mst = prim.primMST();
+                    System.out.println("Árvore Geradora Mínima (Prim):");
+                    for (Aresta aresta : mst) {
+                        System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
+                    }
+                    break;
+                case 13:
+                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (KRUSKAL)
+                    Kruskal kruskal = new Kruskal(grafoLista.getNumeroDeVertices(), grafoLista.getNumeroDeVertices());
+                    // PREENCHA O ARRAY DE ARESTAS COM OS PESOS DAS ARESTAS
+                    System.out.println("Árvore Geradora Mínima (Kruskal):");
+                    kruskal.KruskalMST();
+                    break;
+                case 14:
+                    // IMPLEMENTAÇÃO DO CAMINHO MÍNIMO ENTRE DOIS VÉRTICES (DIJKSTRA)
+                    List<List<Dijkstra.No>> adj = new ArrayList<>();
+                    // PREENCHA A LISTA DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
+                    Dijkstra dijkstra = new Dijkstra(grafoLista.getNumeroDeVertices());
+                    dijkstra.dijkstra(adj, 0);
+                    System.out.println("Caminho mínimo entre dois vértices (Dijkstra) do vértice 0:");
+                    for (int i = 0; i < dijkstra.dist.length; i++) {
+                        System.out.println("Distância do vértice 0 ao vértice " + i + " é " + dijkstra.dist[i]);
+                    }
+                    break;
+                case 15:
+                    // SAIR
                     continuar = false;
                     break;
-
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Opção inválida! Tente novamente.");
             }
         }
         scanner.close();

@@ -2,10 +2,7 @@ package main.java.com.graphalgorithms.implementation;
 
 import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class GrafoListaAdjacencia extends GrafoAbstrato {
     private final int numeroDeVertices;
@@ -189,6 +186,38 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
             System.out.println();
         }
         System.out.println("\n");
+    }
+
+    @Override
+    public List<Integer> ordenacaoTopologica() {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visited[i]) {
+                topologicalSortUtil(i, visited, stack);
+            }
+        }
+
+        List<Integer> order = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            order.add(stack.pop());
+        }
+        return order;
+    }
+
+    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
+        visited[v] = true;
+        Integer i;
+
+        for (Integer neighbor : listaAdjacencia[v]) {
+            i = neighbor;
+            if (!visited[i]) {
+                topologicalSortUtil(i, visited, stack);
+            }
+        }
+
+        stack.push(v);
     }
 
 }

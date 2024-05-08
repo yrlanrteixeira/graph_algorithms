@@ -191,4 +191,11 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
         System.out.println("\n");
     }
+
+    @Override
+    public List<Integer> ordenacaoTopologica() {
+        OrdenacaoTopologica ordenacao = new OrdenacaoTopologica(this);
+        return ordenacao.ordenar();
+    }
+
 }

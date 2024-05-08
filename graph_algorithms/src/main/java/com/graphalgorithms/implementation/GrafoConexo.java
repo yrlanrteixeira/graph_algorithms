@@ -2,7 +2,7 @@ package main.java.com.graphalgorithms.implementation;
 
 public class GrafoConexo {
 
-    public static boolean testeGrafoConexo(GrafoListaAdjacencia grafo) {
+    public static boolean isConexo(GrafoListaAdjacencia grafo) {
         boolean[] visitado = new boolean[grafo.getNumeroDeVertices()];
 
         int verticeInicial = 0;
