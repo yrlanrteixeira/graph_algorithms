@@ -1,12 +1,13 @@
 package main.java.com.graphalgorithms.implementation;
 
-import main.java.com.graphalgorithms.interfaces.Grafo;
+import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
+
 import java.util.*;
 
-public class GrafoListaAdjacencia implements Grafo {
-    private int numeroDeVertices;
-    private boolean isDirecionado;
-    private LinkedList<Integer> listaAdjacencia[];
+public class GrafoListaAdjacencia extends GrafoAbstrato {
+    private final int numeroDeVertices;
+    private final boolean isDirecionado;
+    private final LinkedList<Integer>[] listaAdjacencia;
 
     /**
      * Construtor do grafo de adjacência
@@ -21,7 +22,7 @@ public class GrafoListaAdjacencia implements Grafo {
         this.listaAdjacencia = new LinkedList[numeroDeVertices];
 
         for (int i = 0; i < numeroDeVertices; i++) {
-            listaAdjacencia[i] = new LinkedList();
+            listaAdjacencia[i] = new LinkedList<>();
         }
     }
 
@@ -81,7 +82,7 @@ public class GrafoListaAdjacencia implements Grafo {
 
     @Override
     public int[] getGrau(int vertice) {
-        if (listaAdjacencia[vertice].size() == 0)
+        if (listaAdjacencia[vertice].isEmpty())
             return new int[] { 0 };
 
         if (isDirecionado) {
@@ -164,12 +165,11 @@ public class GrafoListaAdjacencia implements Grafo {
 
     @Override
     public void adicionarVertice() {
-        return;
     }
 
     @Override
     public int getNumeroDeVertices() {
-        return 0;
+        return numeroDeVertices;
     }
 
     @Override
@@ -186,6 +186,38 @@ public class GrafoListaAdjacencia implements Grafo {
             System.out.println();
         }
         System.out.println("\n");
+    }
+
+    @Override
+    public List<Integer> ordenacaoTopologica() {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visited[i]) {
+                topologicalSortUtil(i, visited, stack);
+            }
+        }
+
+        List<Integer> order = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            order.add(stack.pop());
+        }
+        return order;
+    }
+
+    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
+        visited[v] = true;
+        Integer i;
+
+        for (Integer neighbor : listaAdjacencia[v]) {
+            i = neighbor;
+            if (!visited[i]) {
+                topologicalSortUtil(i, visited, stack);
+            }
+        }
+
+        stack.push(v);
     }
 
 }

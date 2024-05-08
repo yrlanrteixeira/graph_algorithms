@@ -1,7 +1,10 @@
 package main.java.com.graphalgorithms.application;
 
-import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
-import main.java.com.graphalgorithms.implementation.GrafoMatrizAdjacencia;
+import main.java.com.graphalgorithms.implementation.*;
+import main.java.com.graphalgorithms.utils.Aresta;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GrafoApplication {
@@ -20,7 +23,7 @@ public class GrafoApplication {
         boolean isDirecionado = scanner.nextBoolean();
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(numeroDeVertices, isDirecionado);
         GrafoListaAdjacencia grafoLista = new GrafoListaAdjacencia(numeroDeVertices, isDirecionado);
-        int origem, destino = 0;
+        int origem, destino;
         boolean continuar = true;
         while (continuar) {
             System.out.println("\n##----------------------------- MENU -----------------------------##");
@@ -32,7 +35,14 @@ public class GrafoApplication {
             System.out.println("| 5. Grau de um vértice                                            |");
             System.out.println("| 6. Informações do grafo (Simples, Regular, Completo e Bipartido) |");
             System.out.println("| 7. Imprimir grafo (Matriz e Lista de Adjacência)                 |");
-            System.out.println("| 8. Sair                                                          |");
+            System.out.println("| 8. Busca por largura                                             |");
+            System.out.println("| 9. Busca por Profundidade                                        |");
+            System.out.println("| 10. Teste grafo conexo                                           |");
+            System.out.println("| 11. Ordenação Topológica                                         |");
+            System.out.println("| 12. Árvore Geradora Mínima (Prim)                                |");
+            System.out.println("| 13. Árvore Geradora Mínima (Kruskal)                             |");
+            System.out.println("| 14. Caminho mínimo entre dois vértices (Dijkstra)                |");
+            System.out.println("| 15. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -162,13 +172,78 @@ public class GrafoApplication {
                     grafoLista.imprimeGrafo(); // Lista de Adjacência
                     break;
 
-                // SAIR
+                // BUSCA POR LARGURA
                 case 8:
-                    continuar = false;
+                    System.out.println("| 8. Busca por largura                                             |");
+                    BuscaLargura bfs = new BuscaLargura(grafoLista);
+                    bfs.buscaLargura(0);
                     break;
 
+                // BUSCA POR PROFUNDIDADE
+                case 9:
+                    System.out.println("| 9. Busca por Profundidade                                        |");
+                    System.out.print("--> Digite o vértice inicial: ");
+                    int verticeInicial = scanner.nextInt();
+
+                    if (verticeInicial < 0 || verticeInicial >= grafoLista.getNumeroDeVertices()) {
+                        System.out.println("[ERROR]: O vértice digitado não existe!");
+                    } else {
+                        BuscaProfundidade.buscaProfundidade(grafoLista, verticeInicial);
+                    }
+
+                    break;
+
+                // TESTE DE GRAFO CONEXO
+                case 10:
+                    System.out.println("| 10. Teste grafo conexo                                           |");
+
+                    if (GrafoConexo.isConexo(grafoLista)) {
+                        System.out.println("O grafo é conexo !");
+                    } else {
+                        System.out.println("O grafo NÃO é conexo !");
+                    }
+
+                    break;
+                case 11:
+                    // IMPLEMENTAÇÃO DA ORDENAÇÃO TOPOLÓGICA
+                    OrdenacaoTopologica ordenacaoTopologica = new OrdenacaoTopologica(grafoLista);
+                    System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+                    break;
+                case 12:
+                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (PRIM)
+                    int[][] matrizAdjacencia = new int[grafoLista.getNumeroDeVertices()][grafoLista.getNumeroDeVertices()];
+                    // PREENCHA A MATRIZ DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
+                    Prim prim = new Prim(grafoLista.getNumeroDeVertices(), matrizAdjacencia);
+                    Aresta[] mst = prim.primMST();
+                    System.out.println("Árvore Geradora Mínima (Prim):");
+                    for (Aresta aresta : mst) {
+                        System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
+                    }
+                    break;
+                case 13:
+                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (KRUSKAL)
+                    Kruskal kruskal = new Kruskal(grafoLista.getNumeroDeVertices(), grafoLista.getNumeroDeVertices());
+                    // PREENCHA O ARRAY DE ARESTAS COM OS PESOS DAS ARESTAS
+                    System.out.println("Árvore Geradora Mínima (Kruskal):");
+                    kruskal.KruskalMST();
+                    break;
+                case 14:
+                    // IMPLEMENTAÇÃO DO CAMINHO MÍNIMO ENTRE DOIS VÉRTICES (DIJKSTRA)
+                    List<List<Dijkstra.No>> adj = new ArrayList<>();
+                    // PREENCHA A LISTA DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
+                    Dijkstra dijkstra = new Dijkstra(grafoLista.getNumeroDeVertices());
+                    dijkstra.dijkstra(adj, 0);
+                    System.out.println("Caminho mínimo entre dois vértices (Dijkstra) do vértice 0:");
+                    for (int i = 0; i < dijkstra.dist.length; i++) {
+                        System.out.println("Distância do vértice 0 ao vértice " + i + " é " + dijkstra.dist[i]);
+                    }
+                    break;
+                case 15:
+                    // SAIR
+                    continuar = false;
+                    break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Opção inválida! Tente novamente.");
             }
         }
         scanner.close();

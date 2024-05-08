@@ -30,4 +30,7 @@ public interface Grafo {
     boolean isBipartido();
 
     void imprimeGrafo();
+
+    List<Integer> ordenacaoTopologica();
+
 }
