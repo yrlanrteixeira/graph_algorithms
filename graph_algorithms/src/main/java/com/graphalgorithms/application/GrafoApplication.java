@@ -3,7 +3,6 @@ package main.java.com.graphalgorithms.application;
 import main.java.com.graphalgorithms.implementation.*;
 import main.java.com.graphalgorithms.utils.Aresta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -229,32 +228,33 @@ public class GrafoApplication {
                     break;
                 case 12:
                     // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (PRIM)
-                    int[][] matrizAdjacencia = new int[grafoLista.getNumeroDeVertices()][grafoLista
-                            .getNumeroDeVertices()];
-                    // PREENCHA A MATRIZ DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
-                    Prim prim = new Prim(grafoLista.getNumeroDeVertices(), matrizAdjacencia);
-                    Aresta[] mst = prim.primMST();
+                    Prim prim = new Prim(grafo);
+                    List<Aresta> mstPrim = prim.prim();
                     System.out.println("Árvore Geradora Mínima (Prim):");
-                    for (Aresta aresta : mst) {
+                    for (Aresta aresta : mstPrim) {
                         System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
                     }
                     break;
                 case 13:
                     // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (KRUSKAL)
-                    Kruskal kruskal = new Kruskal(grafoLista.getNumeroDeVertices(), grafoLista.getNumeroDeVertices());
-                    // PREENCHA O ARRAY DE ARESTAS COM OS PESOS DAS ARESTAS
+                    List<Aresta> mstKruskal = Kruskal.kruskal(grafoLista);
                     System.out.println("Árvore Geradora Mínima (Kruskal):");
-                    kruskal.KruskalMST();
+                    for (Aresta aresta : mstKruskal) {
+                        System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
+                    }
                     break;
                 case 14:
-                    // IMPLEMENTAÇÃO DO CAMINHO MÍNIMO ENTRE DOIS VÉRTICES (DIJKSTRA)
-                    List<List<Dijkstra.No>> adj = new ArrayList<>();
-                    // PREENCHA A LISTA DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
-                    Dijkstra dijkstra = new Dijkstra(grafoLista.getNumeroDeVertices());
-                    dijkstra.dijkstra(adj, 0);
-                    System.out.println("Caminho mínimo entre dois vértices (Dijkstra) do vértice 0:");
-                    for (int i = 0; i < dijkstra.dist.length; i++) {
-                        System.out.println("Distância do vértice 0 ao vértice " + i + " é " + dijkstra.dist[i]);
+                    System.out.println("Digite o vértice de origem para Dijkstra:");
+                    int origemDijkstra = scanner.nextInt();
+                    System.out.println("Digite o vértice de destino para Dijkstra:");
+                    int destinoDijkstra = scanner.nextInt();
+
+                    Dijkstra dijkstra = new Dijkstra(grafo);
+                    int resultadoDijkstra = dijkstra.dijkstra(origemDijkstra, destinoDijkstra);
+                    if (resultadoDijkstra == -1) {
+                        System.out.println("Não há caminho disponível entre os vértices " + origemDijkstra + " e " + destinoDijkstra);
+                    } else {
+                        System.out.println("A distância mínima entre " + origemDijkstra + " e " + destinoDijkstra + " é " + resultadoDijkstra);
                     }
                     break;
                 case 15:

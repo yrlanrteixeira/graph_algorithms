@@ -299,4 +299,14 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         stack.push(v);
     }
 
+    public List<Aresta> getArestasOrdenadas() {
+        List<Aresta> arestas = new ArrayList<>();
+        for (int i = 0; i < numeroDeVertices; i++) {
+            arestas.addAll(listaAdjacencia[i]);
+        }
+        arestas.sort(Comparator.comparingInt(a -> a.peso));
+        return arestas;
+    }
+
+
 }
