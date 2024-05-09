@@ -140,15 +140,7 @@ public class GrafoApplication {
                     System.out.println("| 5. Grau de um vértice                                            |\n");
                     System.out.print("--> Digite o vértice para obter o grau: ");
                     int vertice = scanner.nextInt();
-                    int[] graus = grafo.getGrau(vertice);
                     int[] grausLista = grafoLista.getGrau(vertice);
-                    if (graus.length == 1) {
-                        System.out.println("Grau do vértice " + vertice + ": " + graus[0]);
-                    } else {
-                        System.out.println("Grau de entrada do vértice " + vertice + ": " + graus[0]);
-                        System.out.println("Grau de saída do vértice " + vertice + ": " + graus[1]);
-                    }
-
                     System.out.println("Grau do vértice " + vertice + ": " + grausLista[0]);
                     break;
 
@@ -221,13 +213,21 @@ public class GrafoApplication {
                     }
 
                     break;
+
+                // ORDENAÇÃO TOPOLÓGICA
                 case 11:
-                    // IMPLEMENTAÇÃO DA ORDENAÇÃO TOPOLÓGICA
+                    System.out.println("| 11. Ordenação Topológica                                         |");
                     OrdenacaoTopologica ordenacaoTopologica = new OrdenacaoTopologica(grafoLista);
-                    System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+                    if (ordenacaoTopologica.ordenar() == null) {
+                        System.out.println("[ERRO]: Encontrado ciclo no grafo!");
+                    } else {
+                        System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+                    }
                     break;
+
+                // ÁRVORE GERADORA MINIMA (PRIM)
                 case 12:
-                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (PRIM)
+                    System.out.println("| 12. Árvore Geradora Mínima (Prim)                                |");
                     Prim prim = new Prim(grafo);
                     List<Aresta> mstPrim = prim.prim();
                     System.out.println("Árvore Geradora Mínima (Prim):");
@@ -235,32 +235,41 @@ public class GrafoApplication {
                         System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
                     }
                     break;
+
+                // ÁRVORE GERADORA MINIMA (KRUSKAL)
                 case 13:
-                    // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (KRUSKAL)
+                    System.out.println("| 13. Árvore Geradora Mínima (Kruskal)                             |");
                     List<Aresta> mstKruskal = Kruskal.kruskal(grafoLista);
                     System.out.println("Árvore Geradora Mínima (Kruskal):");
                     for (Aresta aresta : mstKruskal) {
                         System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
                     }
                     break;
+
+                // CAMINHO MÍNIMO ENTRE DOIS VÉRTICES (DIJKSTRA)
                 case 14:
-                    System.out.println("Digite o vértice de origem para Dijkstra:");
+                    System.out.println("| 14. Caminho mínimo entre dois vértices (Dijkstra)                |");
+                    System.out.print("--> Digite o vértice de origem para Dijkstra:");
                     int origemDijkstra = scanner.nextInt();
-                    System.out.println("Digite o vértice de destino para Dijkstra:");
+                    System.out.print("--> Digite o vértice de destino para Dijkstra:");
                     int destinoDijkstra = scanner.nextInt();
 
                     Dijkstra dijkstra = new Dijkstra(grafo);
                     int resultadoDijkstra = dijkstra.dijkstra(origemDijkstra, destinoDijkstra);
                     if (resultadoDijkstra == -1) {
-                        System.out.println("Não há caminho disponível entre os vértices " + origemDijkstra + " e " + destinoDijkstra);
+                        System.out.println("Não há caminho disponível entre os vértices " + origemDijkstra + " e "
+                                + destinoDijkstra);
                     } else {
-                        System.out.println("A distância mínima entre " + origemDijkstra + " e " + destinoDijkstra + " é " + resultadoDijkstra);
+                        System.out.println("A distância mínima entre " + origemDijkstra + " e " + destinoDijkstra
+                                + " é " + resultadoDijkstra);
                     }
                     break;
+
+                // SAIR
                 case 15:
-                    // SAIR
                     continuar = false;
                     break;
+
                 default:
                     System.out.println("Opção inválida! Tente novamente.");
             }

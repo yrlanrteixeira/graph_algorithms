@@ -132,15 +132,19 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
     @Override
     public boolean isSimples() {
-        for (int i = 0; i < numeroDeVertices; i++) {
-            if (matrizAdjacencia[i][i] != null) {
-                return false; // Grafo possui laço, portanto não é simples
-            }
-        }
-
+        Set<Aresta> arestas = new HashSet<>(); // Conjunto para armazenar as arestas únicas
         for (int i = 0; i < numeroDeVertices; i++) {
             for (int j = 0; j < numeroDeVertices; j++) {
-                if (i != j && matrizAdjacencia[i][j] != null && matrizAdjacencia[j][i] != null) {
+                Aresta aresta = matrizAdjacencia[i][j];
+                if (aresta != null) {
+                    if (!arestas.add(aresta)) {
+                        System.out.println("Arestas mútiplas");
+                        return false;
+                    }
+                }
+
+                if (i == j && aresta != null) {
+                    System.out.println(" laço");
                     return false;
                 }
             }
@@ -230,7 +234,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
                 } else {
                     System.out.print("0 ");
                 }
-
+                System.out.print(" ");
             }
             System.out.println(" ");
         }

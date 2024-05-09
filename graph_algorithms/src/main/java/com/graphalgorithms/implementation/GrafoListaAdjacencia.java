@@ -160,6 +160,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         for (int i = 0; i < numeroDeVertices; i++) {
             for (Aresta aresta : listaAdjacencia[i]) {
                 if (aresta.destino == i) {
+                    System.out.println("Laço");
                     return false;
                 }
             }
@@ -169,9 +170,10 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         for (int i = 0; i < numeroDeVertices; i++) {
             Set<Integer> vizinhos = new HashSet<>();
             for (Aresta aresta : listaAdjacencia[i]) {
-                if (vizinhos.contains(aresta.destino))
+                if (vizinhos.contains(aresta.destino)) {
+                    System.out.println("aresta multipla");
                     return false;
-                else
+                } else
                     vizinhos.add(aresta.destino);
             }
         }
@@ -307,6 +309,5 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         arestas.sort(Comparator.comparingInt(a -> a.peso));
         return arestas;
     }
-
 
 }
