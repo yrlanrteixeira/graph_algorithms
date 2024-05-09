@@ -21,6 +21,9 @@ public class GrafoApplication {
         int numeroDeVertices = scanner.nextInt();
         System.out.print("--> O grafo é direcionado? (true/false): ");
         boolean isDirecionado = scanner.nextBoolean();
+        System.out.print("--> O grafo é ponderado? (true/false): ");
+        boolean isPonderado = scanner.nextBoolean();
+
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(numeroDeVertices, isDirecionado);
         GrafoListaAdjacencia grafoLista = new GrafoListaAdjacencia(numeroDeVertices, isDirecionado);
         int origem, destino;
@@ -57,13 +60,28 @@ public class GrafoApplication {
                     System.out.print("--> Digite o vértice de destino da aresta: ");
                     destino = scanner.nextInt();
 
-                    if (grafo.adicionarAresta(origem, destino) && grafoLista.adicionarAresta(origem, destino)) {
-                        System.out.println("\nAresta adicionada!\n");
-                    } else if (!grafo.adicionarAresta(origem, destino)
-                            && !grafoLista.adicionarAresta(origem, destino)) {
-                        System.out.println(
-                                "NÃO foi possível adicionar a aresta! Verifique os vértices de origem e destino!\n");
+                    if (!isPonderado) {
+                        if (grafo.adicionarAresta(origem, destino) && grafoLista.adicionarAresta(origem, destino)) {
+                            System.out.println("\nAresta adicionada!\n");
+                        } else if (!grafo.adicionarAresta(origem, destino)
+                                && !grafoLista.adicionarAresta(origem, destino)) {
+                            System.out.println(
+                                    "NÃO foi possível adicionar a aresta! Verifique os vértices de origem e destino!\n");
+                        }
+                    } else {
+                        System.out.print("--> Digite o peso da aresta: ");
+                        int peso = scanner.nextInt();
+
+                        if (grafo.adicionarAresta(origem, destino, peso)
+                                && grafoLista.adicionarAresta(origem, destino, peso)) {
+                            System.out.println("\nAresta adicionada!\n");
+                        } else if (!grafo.adicionarAresta(origem, destino, peso)
+                                && !grafoLista.adicionarAresta(origem, destino, peso)) {
+                            System.out.println(
+                                    "NÃO foi possível adicionar a aresta! Verifique os vértices de origem e destino!\n");
+                        }
                     }
+
                     break;
 
                 // REMOVER ARESTA
@@ -211,7 +229,8 @@ public class GrafoApplication {
                     break;
                 case 12:
                     // IMPLEMENTAÇÃO DA ÁRVORE GERADORA MÍNIMA (PRIM)
-                    int[][] matrizAdjacencia = new int[grafoLista.getNumeroDeVertices()][grafoLista.getNumeroDeVertices()];
+                    int[][] matrizAdjacencia = new int[grafoLista.getNumeroDeVertices()][grafoLista
+                            .getNumeroDeVertices()];
                     // PREENCHA A MATRIZ DE ADJACÊNCIA COM OS PESOS DAS ARESTAS
                     Prim prim = new Prim(grafoLista.getNumeroDeVertices(), matrizAdjacencia);
                     Aresta[] mst = prim.primMST();
