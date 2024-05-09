@@ -23,7 +23,7 @@ public abstract class GrafoAbstrato implements Grafo {
     }
 
     @Override
-    public abstract boolean adicionarAresta(int origem, int destino);
+    public abstract boolean adicionarAresta(int origem, int destino, int peso);
 
     @Override
     public abstract boolean removerAresta(int origem, int destino);

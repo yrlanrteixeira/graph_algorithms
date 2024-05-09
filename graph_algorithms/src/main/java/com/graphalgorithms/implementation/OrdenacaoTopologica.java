@@ -39,6 +39,7 @@ public class OrdenacaoTopologica {
         if (ordenacao.size() != grafo.getNumeroDeVertices()) {
             return null;
         }
+
         return ordenacao;
     }
 
