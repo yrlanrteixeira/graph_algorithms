@@ -91,12 +91,25 @@ public class GrafoApplication {
                     System.out.print("--> Digite o vértice de destino da aresta: ");
                     destino = scanner.nextInt();
 
-                    if (grafo.removerAresta(origem, destino) && grafoLista.removerAresta(origem, destino)) {
-                        System.out.println("\nAresta removida!\n");
-                    } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
-                        System.out.println(
-                                "NÃO foi possível remover a aresta, verifique os vértices de origem e destino!");
+                    if(!isPonderado){
+                        if (grafo.removerAresta(origem, destino) && grafoLista.removerAresta(origem, destino)) {
+                            System.out.println("\nAresta removida!\n");
+                        } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
+                            System.out.println(
+                                    "NÃO foi possível remover a aresta, verifique os vértices de origem e destino!");
+                        }
+                    } else {
+                        System.out.print("--> Digite o peso da aresta que deseja remover: ");
+                        int peso = scanner.nextInt();
+
+                        if(grafo.removerAresta(origem, destino, peso) && grafoLista.removerAresta(origem, destino, peso)){
+                            System.out.println("\nAresta removida!\n");
+                        } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
+                            System.out.println(
+                                    "NÃO foi possível remover a aresta, verifique os vértices de origem, destino e peso!");
+                        }
                     }
+
 
                     break;
 
@@ -141,7 +154,16 @@ public class GrafoApplication {
                     System.out.print("--> Digite o vértice para obter o grau: ");
                     int vertice = scanner.nextInt();
                     int[] grausLista = grafoLista.getGrau(vertice);
-                    System.out.println("Grau do vértice " + vertice + ": " + grausLista[0]);
+                    int[] grauMatriz = grafo.getGrau(vertice);
+
+                    if(!isDirecionado){
+                        System.out.println("(Lista de Adjacência) Grau do vértice " + vertice + ": " + grausLista[0]);
+                        System.out.println("(Matriz de Adjecência) Grau do vértice " + vertice + ": " + grauMatriz[0]);
+                    } else {
+                        System.out.println("(Lista de Adjacência) Grau de Saída: " + grausLista[1] + "; Grau de Entrada: " + grausLista[0] + "; Grau do Vértice: " + (grausLista[0] + grausLista[1]));
+                        System.out.println("(Matriz de Adjacência) Grau de Saída: " + grauMatriz[1] + "; Grau de Entrada: " + grauMatriz[0] + "; Grau do Vértice: " + (grauMatriz[0] + grauMatriz[1]));
+                    }
+
                     break;
 
                 // INFORMAÇÕES DO GRAFO
@@ -184,20 +206,30 @@ public class GrafoApplication {
                 // BUSCA POR LARGURA
                 case 8:
                     System.out.println("| 8. Busca por largura                                             |");
-                    BuscaLargura bfs = new BuscaLargura(grafoLista);
-                    bfs.buscaLargura(0);
-                    break;
-
-                // BUSCA POR PROFUNDIDADE
-                case 9:
-                    System.out.println("| 9. Busca por Profundidade                                        |");
                     System.out.print("--> Digite o vértice inicial: ");
                     int verticeInicial = scanner.nextInt();
 
                     if (verticeInicial < 0 || verticeInicial >= grafoLista.getNumeroDeVertices()) {
                         System.out.println("[ERROR]: O vértice digitado não existe!");
                     } else {
-                        BuscaProfundidade.buscaProfundidade(grafoLista, verticeInicial);
+                        grafo.buscaLargura(verticeInicial);
+                        System.out.println();
+                        grafoLista.buscaLargura(verticeInicial);
+                    }
+                    break;
+
+                // BUSCA POR PROFUNDIDADE
+                case 9:
+                    System.out.println("| 9. Busca por Profundidade                                        |");
+                    System.out.print("--> Digite o vértice inicial: ");
+                    verticeInicial = scanner.nextInt();
+
+                    if (verticeInicial < 0 || verticeInicial >= grafoLista.getNumeroDeVertices()) {
+                        System.out.println("[ERROR]: O vértice digitado não existe!");
+                    } else {
+                        grafo.buscaProfundidade(verticeInicial);
+                        System.out.println();
+                        grafoLista.buscaProfundidade(verticeInicial);
                     }
 
                     break;
@@ -217,23 +249,42 @@ public class GrafoApplication {
                 // ORDENAÇÃO TOPOLÓGICA
                 case 11:
                     System.out.println("| 11. Ordenação Topológica                                         |");
-                    OrdenacaoTopologica ordenacaoTopologica = new OrdenacaoTopologica(grafoLista);
-                    if (ordenacaoTopologica.ordenar() == null) {
-                        System.out.println("[ERRO]: Encontrado ciclo no grafo!");
-                    } else {
-                        System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+//                    OrdenacaoTopologica ordenacaoTopologica = new OrdenacaoTopologica(grafoLista);
+//                    if (ordenacaoTopologica.ordenar() == null) {
+//                        System.out.println("[ERRO]: Encontrado ciclo no grafo!");
+//                    } else {
+//                        System.out.println("Ordenação Topológica: " + ordenacaoTopologica.ordenar());
+//                    }
+                    System.out.print("(Matriz de Adjacência) Ordenação Topológica: ");
+                    List<Integer> ordenacao = grafo.ordenacaoTopologica();
+                    for(int v : ordenacao){
+                        System.out.print(v + " ");
+                    }
+
+                    System.out.println(" ");
+
+                    System.out.print("(Lista de Adjacência) Ordenação Topológica: ");
+                    List<Integer> ordenacaoLista = grafoLista.ordenacaoTopologica();
+                    for(int v : ordenacaoLista){
+                        System.out.print(v + " ");
                     }
                     break;
 
                 // ÁRVORE GERADORA MINIMA (PRIM)
                 case 12:
                     System.out.println("| 12. Árvore Geradora Mínima (Prim)                                |");
-                    Prim prim = new Prim(grafo);
-                    List<Aresta> mstPrim = prim.prim();
-                    System.out.println("Árvore Geradora Mínima (Prim):");
-                    for (Aresta aresta : mstPrim) {
-                        System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
-                    }
+//                    Prim prim = new Prim(grafo);
+//                    List<Aresta> mstPrim = prim.prim();
+//                    System.out.println("Árvore Geradora Mínima (Prim):");
+//                    for (Aresta aresta : mstPrim) {
+//                        System.out.println(aresta.origem + " -- " + aresta.destino + " == " + aresta.peso);
+//                    }
+                    System.out.print("--> Digite o vértice inicial: ");
+                    verticeInicial = scanner.nextInt();
+                    System.out.println("(Lista de Adjacência): ");
+                    grafoLista.prim(verticeInicial);
+                    System.out.println("Matriz de Adjacência: ");
+                    grafo.prim(verticeInicial);
                     break;
 
                 // ÁRVORE GERADORA MINIMA (KRUSKAL)

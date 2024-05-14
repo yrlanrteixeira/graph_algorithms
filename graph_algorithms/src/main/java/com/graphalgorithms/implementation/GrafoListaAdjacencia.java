@@ -55,12 +55,16 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         return false;
     }
 
+    public boolean removerAresta(int origem, int destino){
+        return removerAresta(origem, destino, 1);
+    }
+
     @Override
-    public boolean removerAresta(int origem, int destino) {
+    public boolean removerAresta(int origem, int destino, int peso) {
         if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
             // Verifica se há uma aresta entre origem e destino
             for (Aresta aresta : listaAdjacencia[origem]) {
-                if (aresta.destino == destino) {
+                if (aresta.getDestino() == destino && aresta.getPeso() == peso) {
                     listaAdjacencia[origem].remove(aresta);
                     break;
                 }
@@ -68,7 +72,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
             // Se o grafo não for direcionado, remove a aresta do destino para a origem
             if (!isDirecionado) {
                 for (Aresta aresta : listaAdjacencia[destino]) {
-                    if (aresta.destino == origem) {
+                    if (aresta.getDestino() == origem && aresta.getPeso() == peso) {
                         listaAdjacencia[destino].remove(aresta);
                         break;
                     }
@@ -110,29 +114,29 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
 
     @Override
     public List<Integer> getSucessores(int vertice) {
-        List<Integer> sucessores = new ArrayList<>();
+        List<Integer> successors = new ArrayList<>();
         for (Aresta aresta : listaAdjacencia[vertice]) {
-            sucessores.add(aresta.destino);
+            successors.add(aresta.destino);
         }
-        return sucessores;
+        return successors;
     }
 
     @Override
     public List<Integer> getPredecessores(int vertice) {
-        List<Integer> predecessores = new ArrayList<>();
+        List<Integer> predecessors = new ArrayList<>();
 
         for (int i = 0; i < numeroDeVertices; i++) {
             if (i != vertice) {
                 for (Aresta aresta : listaAdjacencia[i]) {
                     if (aresta.destino == vertice) {
-                        predecessores.add(i);
+                        predecessors.add(i);
                         break;
                     }
                 }
             }
         }
 
-        return predecessores;
+        return predecessors;
     }
 
     @Override
@@ -149,10 +153,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
 
         grauSaida = listaAdjacencia[vertice].size();
 
-        if (!isDirecionado)
-            return new int[] { listaAdjacencia[vertice].size() };
-        else
-            return new int[] { grauEntrada + grauSaida };
+        return new int[] { grauEntrada, grauSaida};
     }
 
     public boolean isSimples() {
@@ -229,7 +230,6 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
                 }
             }
         }
-
         return true;
     }
 
@@ -269,37 +269,153 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         System.out.println("\n");
     }
 
-    @Override
-    public List<Integer> ordenacaoTopologica() {
-        Stack<Integer> stack = new Stack<>();
-        boolean[] visited = new boolean[numeroDeVertices];
+    public void buscaLargura(int verticeInicial){
+        //Array para mostrar os vértices visitados
+        boolean[] visitado = new boolean[numeroDeVertices];
 
-        for (int i = 0; i < numeroDeVertices; i++) {
-            if (!visited[i]) {
-                topologicalSortUtil(i, visited, stack);
+        //Fila para armazenar os vértices a serem visitados
+        Queue<Integer> fila = new LinkedList<>();
+
+        //Marca o vértice inicial como visitado e o adiciona à fila
+        visitado[verticeInicial] = true;
+        fila.offer(verticeInicial);
+
+        System.out.print("(Lista de Adjacência) Busca por largura: ");
+
+        while(!fila.isEmpty()){
+            //Remove o vértice da frente da fila e o imprime
+            int verticeAtual = fila.poll();
+            System.out.print(verticeAtual + " ");
+
+            //Itera sobre todos os vizinhos do vértice atual
+            for(Aresta aresta : listaAdjacencia[verticeAtual]){
+                int vizinho = aresta.getDestino();
+                //Verifica se o vizinho não foi visitado
+                if(!visitado[vizinho]){
+                    //Marca o vizinho como visitado e o adiciona á fila
+                    visitado[vizinho] = true;
+                    fila.offer(vizinho);
+                }
+
+            }
+        }
+    }
+
+    public void buscaProfundidade(int vertice){
+        boolean[] visitado = new boolean[numeroDeVertices];
+        System.out.print("(Lista de Adjacência) Busca em Profundidade: ");
+        buscaProfundidadeRecursivo(vertice, visitado);
+    }
+
+    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado){
+        visitado[vertice] = true;
+        System.out.print(vertice + " ");
+
+        for(Aresta aresta : listaAdjacencia[vertice]){
+            int vizinho = aresta.getDestino();
+            if(!visitado[vizinho]){
+                buscaProfundidadeRecursivo(vizinho, visitado);
+            }
+        }
+    }
+
+    public List<Integer> ordenacaoTopologica(){
+        List<Integer> ordenacao = new ArrayList<>();
+        boolean[] visitado = new boolean[numeroDeVertices];
+        Stack<Integer> pilha = new Stack<>();
+
+        for(int i = 0; i < numeroDeVertices; i++){
+            if(!visitado[i]){
+                ordenacaoTopologicaRecursivo(i, visitado, pilha);
             }
         }
 
-        List<Integer> order = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            order.add(stack.pop());
+        while(!pilha.isEmpty()){
+            ordenacao.add(pilha.pop());
         }
-        return order;
+
+        return ordenacao;
     }
 
-    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
-        visited[v] = true;
+    private void ordenacaoTopologicaRecursivo(int vertice, boolean[] visitado, Stack<Integer> pilha){
+        visitado[vertice] = true;
 
-        for (Aresta aresta : listaAdjacencia[v]) {
+        for(Aresta aresta : listaAdjacencia[vertice]){
             int vizinho = aresta.destino;
-
-            if (!visited[vizinho]) {
-                topologicalSortUtil(vizinho, visited, stack);
+            if(!visitado[vizinho]){
+                ordenacaoTopologicaRecursivo(vizinho, visitado, pilha);
             }
         }
 
-        stack.push(v);
+        pilha.push(vertice);
     }
+
+    public void prim(int verticeInicial) {
+        boolean[] visitado = new boolean[numeroDeVertices];
+        PriorityQueue<Aresta> filaPrioridade = new PriorityQueue<>((a, b) -> a.peso - b.peso);
+        List<Aresta> arvoreGeradoraMinima = new ArrayList<>();
+        int pesoTotal = 0;
+
+        visitado[verticeInicial] = true;
+        for (Aresta aresta : listaAdjacencia[verticeInicial]) { // Assumindo que listaAdjacencia é uma matriz de adjacência
+            filaPrioridade.offer(aresta);
+        }
+
+        while (!filaPrioridade.isEmpty()) {
+            Aresta arestaAtual = filaPrioridade.poll();
+            int verticeAtual = arestaAtual.destino;
+
+            if (!visitado[verticeAtual]) {
+                visitado[verticeAtual] = true;
+                arvoreGeradoraMinima.add(arestaAtual);
+                pesoTotal += arestaAtual.peso;
+
+                for (Aresta aresta : listaAdjacencia[verticeAtual]) { // Assumindo que listaAdjacencia é uma matriz de adjacência
+                    if (!visitado[aresta.destino]) {
+                        filaPrioridade.offer(aresta);
+                    }
+                }
+            }
+        }
+
+        System.out.println("Arestas da árvore geradora mínima:");
+        for (Aresta aresta : arvoreGeradoraMinima) {
+            System.out.println(aresta.destino + " - " + aresta.peso);
+        }
+        System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
+    }
+
+//    @Override
+//    public List<Integer> ordenacaoTopologica() {
+//        Stack<Integer> stack = new Stack<>();
+//        boolean[] visited = new boolean[numeroDeVertices];
+//
+//        for (int i = 0; i < numeroDeVertices; i++) {
+//            if (!visited[i]) {
+//                topologicalSortUtil(i, visited, stack);
+//            }
+//        }
+//
+//        List<Integer> order = new ArrayList<>();
+//        while (!stack.isEmpty()) {
+//            order.add(stack.pop());
+//        }
+//        return order;
+//    }
+//
+//    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
+//        visited[v] = true;
+//
+//        for (Aresta aresta : listaAdjacencia[v]) {
+//            int vizinho = aresta.destino;
+//
+//            if (!visited[vizinho]) {
+//                topologicalSortUtil(vizinho, visited, stack);
+//            }
+//        }
+//
+//        stack.push(v);
+//    }
 
     public List<Aresta> getArestasOrdenadas() {
         List<Aresta> arestas = new ArrayList<>();

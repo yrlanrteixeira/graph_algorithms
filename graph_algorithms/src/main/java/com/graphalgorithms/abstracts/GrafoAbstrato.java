@@ -12,6 +12,8 @@ public abstract class GrafoAbstrato implements Grafo {
         numeroDeVertices++;
     }
 
+    public abstract boolean removerAresta(int origem, int destino, int peso);
+
     @Override
     public int getNumeroDeVertices() {
         return numeroDeVertices;

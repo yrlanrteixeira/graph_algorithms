@@ -10,4 +10,16 @@ public class Aresta {
         this.destino = destino;
         this.peso = peso;
     }
+
+    public int getDestino(){
+        return this.destino;
+    }
+
+    public int getOrigem(){
+        return this.origem;
+    }
+
+    public int getPeso(){
+        return this.peso;
+    }
 }
