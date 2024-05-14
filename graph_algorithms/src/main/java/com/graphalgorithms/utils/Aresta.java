@@ -19,7 +19,5 @@ public class Aresta {
         return this.origem;
     }
 
-    public int getPeso(){
-        return this.peso;
-    }
+    public int getPeso(){ return this.peso; }
 }
