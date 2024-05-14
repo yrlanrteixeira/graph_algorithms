@@ -527,39 +527,6 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         }
     }
 
-
-//    @Override
-//    public List<Integer> ordenacaoTopologica() {
-//        Stack<Integer> stack = new Stack<>();
-//        boolean[] visited = new boolean[numeroDeVertices];
-//
-//        for (int i = 0; i < numeroDeVertices; i++) {
-//            if (!visited[i]) {
-//                topologicalSortUtil(i, visited, stack);
-//            }
-//        }
-//
-//        List<Integer> order = new ArrayList<>();
-//        while (!stack.isEmpty()) {
-//            order.add(stack.pop());
-//        }
-//        return order;
-//    }
-//
-//    private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
-//        visited[v] = true;
-//
-//        for (Aresta aresta : listaAdjacencia[v]) {
-//            int vizinho = aresta.destino;
-//
-//            if (!visited[vizinho]) {
-//                topologicalSortUtil(vizinho, visited, stack);
-//            }
-//        }
-//
-//        stack.push(v);
-//    }
-
     public List<Aresta> getArestasOrdenadas() {
         List<Aresta> arestas = new ArrayList<>();
         for (int i = 0; i < numeroDeVertices; i++) {

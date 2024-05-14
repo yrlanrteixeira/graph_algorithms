@@ -31,10 +31,8 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     @Override
     public boolean adicionarAresta(int origem, int destino, int peso) {
         if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
-            //matrizAdjacencia[origem][destino] = new Aresta(origem, destino, peso);
             matrizAdjacencia[origem][destino].add(new Aresta(origem, destino, peso));
             if (!isDirecionado) {
-                //matrizAdjacencia[destino][origem] = new Aresta(destino, origem, peso);
                 matrizAdjacencia[destino][origem].add(new Aresta(destino, origem, peso));
             }
             return true;
@@ -42,31 +40,22 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         return false;
     }
 
-    public boolean removerAresta(int origem, int destino){
-        return removerAresta(origem, destino,1);
+    public boolean removerAresta(int origem, int destino) {
+        return removerAresta(origem, destino, 1);
     }
 
     @Override
     public boolean removerAresta(int origem, int destino, int peso) {
-//        if (origem < numeroDeVertices && destino < numeroDeVertices) {
-//            matrizAdjacencia[origem][destino] = null;
-//            if (!isDirecionado) {
-//                matrizAdjacencia[destino][origem] = null;
-//            }
-//            return true;
-//        }
-//        return false;
-
-        if(origem >= 0 && destino >=0 && origem < numeroDeVertices && destino < numeroDeVertices){
+        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
             List<Aresta> arestas = matrizAdjacencia[origem][destino];
-            for(Aresta aresta : arestas){
-                if(aresta.getPeso() == peso){
+            for (Aresta aresta : arestas) {
+                if (aresta.getPeso() == peso) {
                     arestas.remove(aresta);
-                    if(!isDirecionado){
+                    if (!isDirecionado) {
                         // Se não for direcionado, remove também a aresta inversa
                         List<Aresta> arestasInversas = matrizAdjacencia[destino][origem];
-                        for(Aresta inversa : arestasInversas){
-                            if(inversa.getPeso() == peso){
+                        for (Aresta inversa : arestasInversas) {
+                            if (inversa.getPeso() == peso) {
                                 arestasInversas.remove(inversa);
                                 break;
                             }
@@ -86,20 +75,6 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
 
         return Integer.MAX_VALUE;
-    }
-
-    public List<Aresta> getArestas() {
-        List<Aresta> arestas = new ArrayList<>();
-//        for (int i = 0; i < numeroDeVertices; i++) {
-//            for (int j = 0; j < numeroDeVertices; j++) {
-//                Aresta aresta = matrizAdjacencia[i][j];
-//                if (aresta != null) {
-//                    arestas.add(aresta);
-//                }
-//            }
-//        }
-
-        return arestas;
     }
 
     @Override
@@ -130,8 +105,8 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     @Override
     public List<Integer> getVizinhos(int vertice) {
         List<Integer> vizinhos = new ArrayList<>();
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(!matrizAdjacencia[vertice][i].isEmpty() || !matrizAdjacencia[i][vertice].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty() || !matrizAdjacencia[i][vertice].isEmpty()) {
                 vizinhos.add(i);
             }
         }
@@ -141,8 +116,8 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     @Override
     public List<Integer> getSucessores(int vertice) {
         List<Integer> sucessores = new ArrayList<>();
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(!matrizAdjacencia[vertice][i].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
                 sucessores.add(i);
             }
         }
@@ -151,8 +126,8 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
     public List<Integer> getPredecessores(int vertice) {
         List<Integer> sucessores = new ArrayList<>();
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(!matrizAdjacencia[i][vertice].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[i][vertice].isEmpty()) {
                 sucessores.add(i);
             }
         }
@@ -163,24 +138,24 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         int grauEntrada = 0;
         int grauSaida = 0;
 
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(!matrizAdjacencia[i][vertice].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[i][vertice].isEmpty()) {
                 grauEntrada += matrizAdjacencia[i][vertice].size();
             }
-            if(!matrizAdjacencia[vertice][i].isEmpty()){
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
                 grauSaida += matrizAdjacencia[vertice][i].size();
             }
         }
-        return new int[] { grauEntrada, grauSaida };
+        return new int[]{grauEntrada, grauSaida};
     }
 
     @Override
     public boolean isSimples() {
-        for(int i = 0; i < numeroDeVertices; i++){
-            for(int j = 0; j < numeroDeVertices; j++){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
                 List<Aresta> arestas = matrizAdjacencia[i][j];
-                if(!arestas.isEmpty()){
-                    if(i == j || arestas.size() > 1){
+                if (!arestas.isEmpty()) {
+                    if (i == j || arestas.size() > 1) {
                         return false;
                     }
                 }
@@ -191,21 +166,13 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
     @Override
     public boolean isRegular() {
-//        int[] grau = getGrau(0);
-//        for (int i = 1; i < numeroDeVertices; i++) {
-//            if (!Arrays.equals(getGrau(i), grau)) {
-//                return false;
-//            }
-//        }
-//        return true;
-
         int[] grauPrimeiroVertice = getGrau(0);
         int grau = grauPrimeiroVertice[0] + grauPrimeiroVertice[1];
 
-        for(int i = 1; i < numeroDeVertices; i++){
+        for (int i = 1; i < numeroDeVertices; i++) {
             int[] grauVerticeAtual = getGrau(i);
             int grauAtual = grauVerticeAtual[0] + grauVerticeAtual[1];
-            if(grau != grauAtual){
+            if (grau != grauAtual) {
                 return false;
             }
         }
@@ -214,9 +181,9 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
     @Override
     public boolean isCompleto() {
-        for(int i = 0; i < numeroDeVertices; i++){
-            for(int j = i+1; j < numeroDeVertices; j++){
-                if(matrizAdjacencia[i][j].isEmpty() && matrizAdjacencia[j][i].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = i + 1; j < numeroDeVertices; j++) {
+                if (matrizAdjacencia[i][j].isEmpty() && matrizAdjacencia[j][i].isEmpty()) {
                     return false;
                 }
             }
@@ -233,22 +200,22 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         // Fila para realizar a busca em largura
         Queue<Integer> fila = new LinkedList<>();
 
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(cores[i] == -1){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (cores[i] == -1) {
                 fila.offer(i);
                 cores[i] = 0;
 
-                while(!fila.isEmpty()){
+                while (!fila.isEmpty()) {
                     int vertice = fila.poll();
 
-                    for(int j = 0; j < numeroDeVertices; j++){
-                        for(Aresta aresta : matrizAdjacencia[vertice][j]){
+                    for (int j = 0; j < numeroDeVertices; j++) {
+                        for (Aresta aresta : matrizAdjacencia[vertice][j]) {
                             int vizinho = aresta.getDestino();
 
-                            if(cores[vizinho] == -1){
+                            if (cores[vizinho] == -1) {
                                 fila.offer(vizinho);
                                 cores[vizinho] = 1 - cores[vertice];
-                            } else if(cores[vizinho] == cores[vertice]){
+                            } else if (cores[vizinho] == cores[vertice]) {
                                 return false;
                             }
                         }
@@ -265,16 +232,15 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         for (int colunas = -1; colunas < numeroDeVertices; colunas++) {
             if (colunas == -1) {
                 System.out.print("   ");
-            } else
-                System.out.print("V" + colunas + " ");
+            } else System.out.print("V" + colunas + " ");
         }
         System.out.println(" ");
 
-        for(int i = 0; i < numeroDeVertices; i++){
+        for (int i = 0; i < numeroDeVertices; i++) {
             System.out.print("V" + i + "  ");
-            for(int j = 0; j < numeroDeVertices; j++){
+            for (int j = 0; j < numeroDeVertices; j++) {
                 int somaPesos = 0;
-                for(Aresta aresta : matrizAdjacencia[i][j]){
+                for (Aresta aresta : matrizAdjacencia[i][j]) {
                     somaPesos += aresta.getPeso();
                 }
                 System.out.print(somaPesos + "  ");
@@ -284,7 +250,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         System.out.println("\n");
     }
 
-    public void buscaLargura(int verticeInicial){
+    public void buscaLargura(int verticeInicial) {
         // Array para marcar os vértices visitados
         boolean[] visitado = new boolean[numeroDeVertices];
 
@@ -297,15 +263,15 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
         System.out.print("(Matriz de Adjacência) Busca por largura: ");
 
-        while(!fila.isEmpty()){
+        while (!fila.isEmpty()) {
             //Remove o vértice da frente da fila e o imprime
             int verticeAtual = fila.poll();
             System.out.print(verticeAtual + " ");
 
             //Itera sobre todos os vizinhos do vértice atual
-            for(int vizinho = 0; vizinho < numeroDeVertices; vizinho++){
+            for (int vizinho = 0; vizinho < numeroDeVertices; vizinho++) {
                 //Verifica se o vizinho não foi visitado e se há uma aresta entre o vértice atual e o vizinho
-                if(!visitado[vizinho] && !matrizAdjacencia[verticeAtual][vizinho].isEmpty()){
+                if (!visitado[vizinho] && !matrizAdjacencia[verticeAtual][vizinho].isEmpty()) {
                     visitado[vizinho] = true;
                     fila.offer(vizinho);
                 }
@@ -313,18 +279,18 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
     }
 
-    public void buscaProfundidade(int vertice){
+    public void buscaProfundidade(int vertice) {
         boolean[] visitado = new boolean[numeroDeVertices];
         System.out.print("(Matriz de Adjacência) Busca em Profundidade: ");
         buscaProfundidadeRecursivo(vertice, visitado);
     }
 
-    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado){
+    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado) {
         visitado[vertice] = true;
         System.out.print(vertice + " ");
 
-        for(int vizinho = 0; vizinho < numeroDeVertices; vizinho++){
-            if(!visitado[vizinho] && !matrizAdjacencia[vertice][vizinho].isEmpty()){
+        for (int vizinho = 0; vizinho < numeroDeVertices; vizinho++) {
+            if (!visitado[vizinho] && !matrizAdjacencia[vertice][vizinho].isEmpty()) {
                 buscaProfundidadeRecursivo(vizinho, visitado);
             }
         }
@@ -335,21 +301,21 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         boolean[] visitado = new boolean[numeroDeVertices];
         Stack<Integer> pilha = new Stack<>();
 
-        for(int i = 0; i < numeroDeVertices; i++){
-            if(!visitado[i]){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visitado[i]) {
                 ordenacaoTopologicaRecursivo(i, visitado, pilha);
             }
         }
 
-        while(!pilha.isEmpty()){
+        while (!pilha.isEmpty()) {
             ordenacao.add(pilha.pop());
         }
 
         return ordenacao;
     }
 
-    private void ordenacaoTopologicaRecursivo(int vertice, boolean[] visitado, Stack<Integer>pilha){
-        visitado[vertice] =true;
+    private void ordenacaoTopologicaRecursivo(int vertice, boolean[] visitado, Stack<Integer> pilha) {
+        visitado[vertice] = true;
 
         for (Aresta aresta : matrizAdjacencia[vertice][vertice]) {
             int vizinho = aresta.getDestino();
@@ -370,12 +336,12 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         key[verticeInicial] = 0;
         int pesoTotal = 0;
 
-        for(int count = 0; count < numeroDeVertices - 1; count++){
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
             int u = minKey(key, mstSet);
             mstSet[u] = true;
 
-            for(int v=0; v < numeroDeVertices; v++){
-                if(!matrizAdjacencia[u][v].isEmpty() && !mstSet[v] && matrizAdjacencia[u][v].get(0).getPeso() < key[v]){
+            for (int v = 0; v < numeroDeVertices; v++) {
+                if (!matrizAdjacencia[u][v].isEmpty() && !mstSet[v] && matrizAdjacencia[u][v].get(0).getPeso() < key[v]) {
                     key[v] = matrizAdjacencia[u][v].get(0).getPeso();
                     mst.add(matrizAdjacencia[u][v].get(0));
                     System.out.println("Aresta adicionada: (" + u + " --- " + v + ") com peso " + key[v]);
@@ -387,11 +353,11 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
     }
 
-    private int minKey(int[] key, boolean[] mstSet){
+    private int minKey(int[] key, boolean[] mstSet) {
         int min = Integer.MAX_VALUE, min_index = -1;
 
-        for(int v = 0; v < numeroDeVertices; v++){
-            if(!mstSet[v] && key[v] < min) {
+        for (int v = 0; v < numeroDeVertices; v++) {
+            if (!mstSet[v] && key[v] < min) {
                 min = key[v];
                 min_index = v;
             }
@@ -400,11 +366,11 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         return min_index;
     }
 
-    public void kruskal(){
+    public void kruskal() {
         List<Aresta> arestas = new ArrayList<>();
-        for(int i = 0; i < numeroDeVertices; i++){
-            for(int j = 0; j < numeroDeVertices; j++){
-                if(!matrizAdjacencia[i][j].isEmpty()){
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (!matrizAdjacencia[i][j].isEmpty()) {
                     arestas.addAll(matrizAdjacencia[i][j]);
                 }
             }
@@ -414,17 +380,17 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         Collections.sort(arestas, Comparator.comparingInt(Aresta::getPeso));
 
         int[] pai = new int[numeroDeVertices];
-        for(int i = 0; i < numeroDeVertices; i++){
+        for (int i = 0; i < numeroDeVertices; i++) {
             pai[i] = i;
         }
 
         int pesoTotal = 0;
 
-        for(Aresta aresta : arestas){
+        for (Aresta aresta : arestas) {
             int u = aresta.getOrigem();
             int v = aresta.getDestino();
 
-            if(find(u, pai) != find(v, pai)){
+            if (find(u, pai) != find(v, pai)) {
                 union(u, v, pai);
                 System.out.println("Aresta adicionada: (" + u + " --- " + v + ") com peso " + aresta.getPeso());
                 pesoTotal += aresta.getPeso();
@@ -490,8 +456,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     }
 
     private void printPath(int prev[], int j) {
-        if (prev[j] != -1)
-            printPath(prev, prev[j]);
+        if (prev[j] != -1) printPath(prev, prev[j]);
 
         System.out.print(j + " ");
     }
@@ -524,10 +489,18 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
     }
 
-//    @Override
-//    public List<Integer> ordenacaoTopologica() {
-//        OrdenacaoTopologica ordenacao = new OrdenacaoTopologica(this);
-//        return ordenacao.ordenar();
-//    }
+    //MÉTODO INUTILIZADO
+    public List<Aresta> getArestas() {
+        List<Aresta> arestas = new ArrayList<>();
+//        for (int i = 0; i < numeroDeVertices; i++) {
+//            for (int j = 0; j < numeroDeVertices; j++) {
+//                Aresta aresta = matrizAdjacencia[i][j];
+//                if (aresta != null) {
+//                    arestas.add(aresta);
+//                }
+//            }
+//        }
+        return arestas;
+    }
 
 }
