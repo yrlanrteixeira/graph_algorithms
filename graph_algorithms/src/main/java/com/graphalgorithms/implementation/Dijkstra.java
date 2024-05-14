@@ -2,85 +2,42 @@ package main.java.com.graphalgorithms.implementation;
 
 import java.util.*;
 
+import java.util.PriorityQueue;
+import java.util.Comparator;
+
 public class Dijkstra {
-    private static final int INFINITO = Integer.MAX_VALUE;
+    private final GrafoMatrizAdjacencia grafo;
 
-    public int[] dist;
-    private Set<Integer> verticesVisitados;
-    private PriorityQueue<No> filaPrioridade;
-    private int V; // Número de vértices
-    List<List<No>> adj;
-
-    public Dijkstra(int V) {
-        this.V = V;
-        dist = new int[V];
-        verticesVisitados = new HashSet<>();
-        filaPrioridade = new PriorityQueue<>(V, new No());
+    public Dijkstra(GrafoMatrizAdjacencia grafo) {
+        this.grafo = grafo;
     }
 
-    public void dijkstra(List<List<No>> adj, int src) {
-        this.adj = adj;
+    public int dijkstra(int origem, int destino) {
+        int numVertices = grafo.getNumeroDeVertices();
+        int[] distancia = new int[numVertices];
+        boolean[] visitado = new boolean[numVertices];
+        PriorityQueue<Integer> filaPrioridade = new PriorityQueue<>(Comparator.comparingInt(v -> distancia[v]));
 
-        for (int i = 0; i < V; i++)
-            dist[i] = INFINITO;
+        Arrays.fill(distancia, Integer.MAX_VALUE);
+        distancia[origem] = 0;
+        filaPrioridade.add(origem);
 
-        // Adiciona o nó de origem à fila de prioridade
-        filaPrioridade.add(new No(src, 0));
+        while (!filaPrioridade.isEmpty()) {
+            int u = filaPrioridade.poll();
+            if (u == destino) return distancia[destino];
+            visitado[u] = true;
 
-        // A distância para a origem é 0
-        dist[src] = 0;
-        while (verticesVisitados.size() != V) {
-
-            // remove o nó de distância mínima
-            // da fila de prioridade
-            int u = filaPrioridade.remove().no;
-
-            // adiciona o nó cuja distância é
-            // finalizada
-            verticesVisitados.add(u);
-
-            e_Vizinhos(u);
-        }
-    }
-
-    private void e_Vizinhos(int u) {
-        int distanciaBorda = -1;
-        int novaDistancia = -1;
-
-        // Todos os vizinhos de v
-        for (int i = 0; i < adj.get(u).size(); i++) {
-            No v = adj.get(u).get(i);
-
-            // Se o nó atual ainda não foi processado
-            if (!verticesVisitados.contains(v.no)) {
-                distanciaBorda = v.custo;
-                novaDistancia = dist[u] + distanciaBorda;
-
-                // Se a nova distância for mais barata em custo
-                if (novaDistancia < dist[v.no])
-                    dist[v.no] = novaDistancia;
-
-                // Adiciona o nó atual à fila
-                filaPrioridade.add(new No(v.no, dist[v.no]));
+            for (int v = 0; v < numVertices; v++) {
+                if (!visitado[v] && grafo.temAresta(u, v)) {
+                    int pesoAresta = grafo.getPesoAresta(u, v);
+                    if (distancia[u] + pesoAresta < distancia[v]) {
+                        distancia[v] = distancia[u] + pesoAresta;
+                        filaPrioridade.add(v);
+                    }
+                }
             }
         }
-    }
 
-    public static class No implements Comparator<No> {
-        public int no;
-        public int custo;
-
-        public No() {
-        }
-
-        public No(int no, int custo) {
-            this.no = no;
-            this.custo = custo;
-        }
-
-        @Override
-        public int compare(No no1, No no2) {
-            return Integer.compare(no1.custo, no2.custo);
-        }
+        return distancia[destino] != Integer.MAX_VALUE ? distancia[destino] : -1;
     }
 }

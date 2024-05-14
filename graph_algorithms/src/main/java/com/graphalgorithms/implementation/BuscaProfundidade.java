@@ -21,7 +21,7 @@ public class BuscaProfundidade {
     }
 
     public static void buscaProfundidadeRecursiva(GrafoListaAdjacencia grafo, int vertice, boolean[] visitado,
-                                                  Map<Integer, Integer> pais, List<String> arestasDeRetorno, int nivel) {
+            Map<Integer, Integer> pais, List<String> arestasDeRetorno, int nivel) {
 
         // Marca o vértice atual como visitado
         visitado[vertice] = true;
@@ -32,7 +32,7 @@ public class BuscaProfundidade {
             if (!visitado[vizinho]) {
                 pais.put(vizinho, vertice);
                 buscaProfundidadeRecursiva(grafo, vizinho, visitado, pais, arestasDeRetorno, nivel + 1);
-            } else if (!pais.get(vertice).equals(vizinho)) {
+            } else if (pais.containsKey(vertice) && !pais.get(vertice).equals(vizinho)) {
                 arestasDeRetorno.add("(" + vertice + ", " + vizinho + ")");
             }
         }
