@@ -68,28 +68,9 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         return false;
     }
 
-    public int getPesoAresta(int origem, int destino) {
-        if (matrizAdjacencia[origem][destino] != null) {
-
-            //return matrizAdjacencia[origem][destino].peso;
-        }
-
-        return Integer.MAX_VALUE;
-    }
-
     @Override
     public int getNumeroDeVertices() {
         return numeroDeVertices;
-    }
-
-    @Override
-    public boolean temAresta(int origem, int destino) {
-        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
-            if (matrizAdjacencia[origem][destino] != null) {
-                return true; // Aresta encontrada
-            }
-        }
-        return false; // Não há aresta entre os vértices
     }
 
     private List<Integer> getAdjacentes(int vertice, boolean isPredecessor) {
@@ -377,7 +358,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
 
         //Ordena as arestas em ordem crescente de peso
-        Collections.sort(arestas, Comparator.comparingInt(Aresta::getPeso));
+        arestas.sort(Comparator.comparingInt(Aresta::getPeso));
 
         int[] pai = new int[numeroDeVertices];
         for (int i = 0; i < numeroDeVertices; i++) {
@@ -415,9 +396,9 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     }
 
     public void dijkstra(int verticeInicial, int verticeFinal) {
-        int dist[] = new int[numeroDeVertices];
-        boolean mstSet[] = new boolean[numeroDeVertices];
-        int prev[] = new int[numeroDeVertices];
+        int[] dist = new int[numeroDeVertices];
+        boolean[] mstSet = new boolean[numeroDeVertices];
+        int[] prev = new int[numeroDeVertices];
 
         for (int i = 0; i < numeroDeVertices; i++) {
             dist[i] = Integer.MAX_VALUE;
@@ -443,7 +424,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         printPath(prev, verticeFinal);
     }
 
-    private int minDistance(int dist[], boolean mstSet[]) {
+    private int minDistance(int[] dist, boolean[] mstSet) {
         int min = Integer.MAX_VALUE, min_index = -1;
 
         for (int v = 0; v < numeroDeVertices; v++)
@@ -455,7 +436,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         return min_index;
     }
 
-    private void printPath(int prev[], int j) {
+    private void printPath(int[] prev, int j) {
         if (prev[j] != -1) printPath(prev, prev[j]);
 
         System.out.print(j + " ");
@@ -487,20 +468,6 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
                 dfs(i, visitado);
             }
         }
-    }
-
-    //MÉTODO INUTILIZADO
-    public List<Aresta> getArestas() {
-        List<Aresta> arestas = new ArrayList<>();
-//        for (int i = 0; i < numeroDeVertices; i++) {
-//            for (int j = 0; j < numeroDeVertices; j++) {
-//                Aresta aresta = matrizAdjacencia[i][j];
-//                if (aresta != null) {
-//                    arestas.add(aresta);
-//                }
-//            }
-//        }
-        return arestas;
     }
 
 }

@@ -5,10 +5,6 @@ import java.util.List;
 import main.java.com.graphalgorithms.utils.Aresta;
 
 public interface Grafo {
-    /**
-     * Método para adicionar vértices ao grafo
-     */
-    void adicionarVertice();
 
     /**
      * Método para adicionar aresta ao grafo
@@ -30,36 +26,11 @@ public interface Grafo {
     boolean removerAresta(int origem, int destino);
 
     /**
-     * Método para pegar todas as arestas
-     * 
-     * @return Retorna uma lista com todas as arestas
-     */
-    List<Aresta> getArestas();
-
-    /**
-     * Método para pegar o peso de uma aresta
-     * 
-     * @param origem  Vértice de origem
-     * @param destino Vértice de destino
-     * @return Retorna o peso da aresta
-     */
-    int getPesoAresta(int origem, int destino);
-
-    /**
      * Método para pegar o número de vértices do grafo
      * 
      * @return Retorna o número de vértices do grafo
      */
     int getNumeroDeVertices();
-
-    /**
-     * Método para verificar se a aresta existe
-     * 
-     * @param origem  Vértice de origem da aresta
-     * @param destino Vértice de destino da aresta
-     * @return Retorna true se a aresta existe e false se não existe
-     */
-    boolean temAresta(int origem, int destino);
 
     /**
      * Método para obter todos os vizinhos de um vértice
