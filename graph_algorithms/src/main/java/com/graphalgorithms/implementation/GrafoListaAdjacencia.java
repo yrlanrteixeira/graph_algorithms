@@ -351,39 +351,182 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
     }
 
     public void prim(int verticeInicial) {
-        boolean[] visitado = new boolean[numeroDeVertices];
-        PriorityQueue<Aresta> filaPrioridade = new PriorityQueue<>((a, b) -> a.peso - b.peso);
-        List<Aresta> arvoreGeradoraMinima = new ArrayList<>();
-        int pesoTotal = 0;
+        int[] chave = new int[numeroDeVertices];
+        int[] pai = new int[numeroDeVertices];
+        boolean[] mstSet = new boolean[numeroDeVertices];
 
-        visitado[verticeInicial] = true;
-        for (Aresta aresta : listaAdjacencia[verticeInicial]) { // Assumindo que listaAdjacencia é uma matriz de adjacência
-            filaPrioridade.offer(aresta);
+        for (int i = 0; i < numeroDeVertices; i++) {
+            chave[i] = Integer.MAX_VALUE;
+            mstSet[i] = false;
         }
 
-        while (!filaPrioridade.isEmpty()) {
-            Aresta arestaAtual = filaPrioridade.poll();
-            int verticeAtual = arestaAtual.destino;
+        chave[verticeInicial] = 0;
+        pai[verticeInicial] = -1;
 
-            if (!visitado[verticeAtual]) {
-                visitado[verticeAtual] = true;
-                arvoreGeradoraMinima.add(arestaAtual);
-                pesoTotal += arestaAtual.peso;
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minKey(chave, mstSet);
+            mstSet[u] = true;
 
-                for (Aresta aresta : listaAdjacencia[verticeAtual]) { // Assumindo que listaAdjacencia é uma matriz de adjacência
-                    if (!visitado[aresta.destino]) {
-                        filaPrioridade.offer(aresta);
-                    }
+            for (Aresta aresta : listaAdjacencia[u]) {
+                int v = aresta.getDestino();
+                if (!mstSet[v] && aresta.getPeso() < chave[v]) {
+                    pai[v] = u;
+                    chave[v] = aresta.getPeso();
                 }
             }
         }
 
+        printMST(pai, chave);
+    }
+
+    private int minKey(int[] chave, boolean[] mstSet) {
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+        for (int v = 0; v < numeroDeVertices; v++)
+            if (!mstSet[v] && chave[v] < min) {
+                min = chave[v];
+                min_index = v;
+            }
+
+        return min_index;
+    }
+
+    private void printMST(int[] pai, int[] chave) {
         System.out.println("Arestas da árvore geradora mínima:");
-        for (Aresta aresta : arvoreGeradoraMinima) {
-            System.out.println(aresta.destino + " - " + aresta.peso);
+        int pesoTotal = 0;
+        for (int i = 1; i < numeroDeVertices; i++) {
+            System.out.println("Aresta adicionada: (" + pai[i] + " --- " + i + ") com peso " + chave[i]);
+            pesoTotal += chave[i];
         }
         System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
     }
+
+    public void kruskal() {
+        // Cria uma lista para armazenar todas as arestas
+        List<Aresta> arestas = new ArrayList<>();
+        for (int i = 0; i < numeroDeVertices; i++) {
+            arestas.addAll(listaAdjacencia[i]);
+        }
+
+        // Ordena as arestas em ordem crescente de peso
+        Collections.sort(arestas, Comparator.comparingInt(Aresta::getPeso));
+
+        // Cria um conjunto disjunto
+        int[] pai = new int[numeroDeVertices];
+        for (int i = 0; i < numeroDeVertices; i++) {
+            pai[i] = i;
+        }
+
+        // Variável para armazenar o peso total da MST
+        int pesoTotal = 0;
+
+        // Processa as arestas em ordem crescente de peso
+        for (Aresta aresta : arestas) {
+            int u = aresta.getOrigem();
+            int v = aresta.getDestino();
+
+            // Se u e v não estiverem no mesmo conjunto, adiciona a aresta à MST
+            if (find(u, pai) != find(v, pai)) {
+                union(u, v, pai);
+                System.out.println("Aresta adicionada: (" + u + " --- " + v + ") com peso " + aresta.getPeso());
+                pesoTotal += aresta.getPeso();
+            }
+        }
+
+        System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
+    }
+
+    private int find(int x, int[] pai) {
+        if (pai[x] == x) {
+            return x;
+        } else {
+            return find(pai[x], pai);
+        }
+    }
+
+    private void union(int x, int y, int[] pai) {
+        int xRoot = find(x, pai);
+        int yRoot = find(y, pai);
+        pai[xRoot] = yRoot;
+    }
+
+    public void dijkstra(int verticeInicial, int verticeFinal) {
+        int dist[] = new int[numeroDeVertices];
+        int prev[] = new int[numeroDeVertices];
+        boolean mstSet[] = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            prev[i] = -1;
+            mstSet[i] = false;
+        }
+
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, mstSet);
+
+            mstSet[u] = true;
+
+            for (Aresta aresta : listaAdjacencia[u]) {
+                int v = aresta.getDestino();
+                if (!mstSet[v] && aresta.getPeso() + dist[u] < dist[v]) {
+                    prev[v] = u;
+                    dist[v] = aresta.getPeso() + dist[u];
+                }
+            }
+        }
+
+        printPath(prev, verticeFinal);
+    }
+
+    private int minDistance(int dist[], boolean mstSet[]) {
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+        for (int v = 0; v < numeroDeVertices; v++)
+            if (!mstSet[v] && dist[v] <= min) {
+                min = dist[v];
+                min_index = v;
+            }
+
+        return min_index;
+    }
+
+    private void printPath(int prev[], int j) {
+        if (prev[j] != -1)
+            printPath(prev, prev[j]);
+
+        System.out.print(j + " ");
+    }
+
+    public boolean isConexo() {
+        boolean[] visitado = new boolean[numeroDeVertices];
+
+        // Faz uma busca em profundidade a partir do primeiro vértice
+        dfs(0, visitado);
+
+        // Verifica se todos os vértices foram visitados
+        for (boolean v : visitado) {
+            if (!v) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void dfs(int v, boolean[] visitado) {
+        // Marca o vértice como visitado
+        visitado[v] = true;
+
+        // Visita todos os vértices adjacentes que ainda não foram visitados
+        for (Aresta aresta : listaAdjacencia[v]) {
+            if (!visitado[aresta.getDestino()]) {
+                dfs(aresta.getDestino(), visitado);
+            }
+        }
+    }
+
 
 //    @Override
 //    public List<Integer> ordenacaoTopologica() {

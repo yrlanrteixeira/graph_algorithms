@@ -361,38 +361,167 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     }
 
     public void prim(int verticeInicial) {
-        boolean[] visitado = new boolean[numeroDeVertices];
-        PriorityQueue<Aresta> filaPrioridade = new PriorityQueue<>((a, b) -> a.peso - b.peso);
-        List<Aresta> arvoreGeradoraMinima = new ArrayList<>();
+        List<Aresta> mst = new ArrayList<>();
+        boolean[] mstSet = new boolean[numeroDeVertices];
+
+        int[] key = new int[numeroDeVertices];
+        Arrays.fill(key, Integer.MAX_VALUE);
+
+        key[verticeInicial] = 0;
         int pesoTotal = 0;
 
-        visitado[verticeInicial] = true;
-        for (Aresta aresta : matrizAdjacencia[verticeInicial][verticeInicial]) {
-            filaPrioridade.offer(aresta);
-        }
+        for(int count = 0; count < numeroDeVertices - 1; count++){
+            int u = minKey(key, mstSet);
+            mstSet[u] = true;
 
-        while (!filaPrioridade.isEmpty()) {
-            Aresta arestaAtual = filaPrioridade.poll();
-            int verticeAtual = arestaAtual.destino;
-
-            if (!visitado[verticeAtual]) {
-                visitado[verticeAtual] = true;
-                arvoreGeradoraMinima.add(arestaAtual);
-                pesoTotal += arestaAtual.peso;
-
-                for (Aresta aresta : matrizAdjacencia[verticeAtual][verticeAtual]) {
-                    if (!visitado[aresta.destino]) {
-                        filaPrioridade.offer(aresta);
-                    }
+            for(int v=0; v < numeroDeVertices; v++){
+                if(!matrizAdjacencia[u][v].isEmpty() && !mstSet[v] && matrizAdjacencia[u][v].get(0).getPeso() < key[v]){
+                    key[v] = matrizAdjacencia[u][v].get(0).getPeso();
+                    mst.add(matrizAdjacencia[u][v].get(0));
+                    System.out.println("Aresta adicionada: (" + u + " --- " + v + ") com peso " + key[v]);
+                    pesoTotal += key[v];
                 }
             }
         }
 
-        System.out.println("Arestas da árvore geradora mínima:");
-        for (Aresta aresta : arvoreGeradoraMinima) {
-            System.out.println(aresta.origem + " - " + aresta.destino + " : " + aresta.peso);
-        }
         System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
+    }
+
+    private int minKey(int[] key, boolean[] mstSet){
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+        for(int v = 0; v < numeroDeVertices; v++){
+            if(!mstSet[v] && key[v] < min) {
+                min = key[v];
+                min_index = v;
+            }
+        }
+
+        return min_index;
+    }
+
+    public void kruskal(){
+        List<Aresta> arestas = new ArrayList<>();
+        for(int i = 0; i < numeroDeVertices; i++){
+            for(int j = 0; j < numeroDeVertices; j++){
+                if(!matrizAdjacencia[i][j].isEmpty()){
+                    arestas.addAll(matrizAdjacencia[i][j]);
+                }
+            }
+        }
+
+        //Ordena as arestas em ordem crescente de peso
+        Collections.sort(arestas, Comparator.comparingInt(Aresta::getPeso));
+
+        int[] pai = new int[numeroDeVertices];
+        for(int i = 0; i < numeroDeVertices; i++){
+            pai[i] = i;
+        }
+
+        int pesoTotal = 0;
+
+        for(Aresta aresta : arestas){
+            int u = aresta.getOrigem();
+            int v = aresta.getDestino();
+
+            if(find(u, pai) != find(v, pai)){
+                union(u, v, pai);
+                System.out.println("Aresta adicionada: (" + u + " --- " + v + ") com peso " + aresta.getPeso());
+                pesoTotal += aresta.getPeso();
+            }
+        }
+
+        System.out.println("Peso total da árvore geradora mínima: " + pesoTotal);
+    }
+
+    private int find(int x, int[] pai) {
+        if (pai[x] == x) {
+            return x;
+        } else {
+            return find(pai[x], pai);
+        }
+    }
+
+    private void union(int x, int y, int[] pai) {
+        int xRoot = find(x, pai);
+        int yRoot = find(y, pai);
+        pai[xRoot] = yRoot;
+    }
+
+    public void dijkstra(int verticeInicial, int verticeFinal) {
+        int dist[] = new int[numeroDeVertices];
+        boolean mstSet[] = new boolean[numeroDeVertices];
+        int prev[] = new int[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            mstSet[i] = false;
+            prev[i] = -1;
+        }
+
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, mstSet);
+
+            mstSet[u] = true;
+
+            for (int v = 0; v < numeroDeVertices; v++) {
+                if (!mstSet[v] && !matrizAdjacencia[u][v].isEmpty() && dist[u] != Integer.MAX_VALUE && dist[u] + matrizAdjacencia[u][v].get(0).getPeso() < dist[v]) {
+                    dist[v] = dist[u] + matrizAdjacencia[u][v].get(0).getPeso();
+                    prev[v] = u;
+                }
+            }
+        }
+
+        printPath(prev, verticeFinal);
+    }
+
+    private int minDistance(int dist[], boolean mstSet[]) {
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+        for (int v = 0; v < numeroDeVertices; v++)
+            if (!mstSet[v] && dist[v] <= min) {
+                min = dist[v];
+                min_index = v;
+            }
+
+        return min_index;
+    }
+
+    private void printPath(int prev[], int j) {
+        if (prev[j] != -1)
+            printPath(prev, prev[j]);
+
+        System.out.print(j + " ");
+    }
+
+    public boolean isConexo() {
+        boolean[] visitado = new boolean[numeroDeVertices];
+
+        // Faz uma busca em profundidade a partir do primeiro vértice
+        dfs(0, visitado);
+
+        // Verifica se todos os vértices foram visitados
+        for (boolean v : visitado) {
+            if (!v) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void dfs(int v, boolean[] visitado) {
+        // Marca o vértice como visitado
+        visitado[v] = true;
+
+        // Visita todos os vértices adjacentes que ainda não foram visitados
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[v][i].isEmpty() && !visitado[i]) {
+                dfs(i, visitado);
+            }
+        }
     }
 
 //    @Override
