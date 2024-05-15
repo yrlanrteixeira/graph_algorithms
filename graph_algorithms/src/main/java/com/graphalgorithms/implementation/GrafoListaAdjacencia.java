@@ -311,7 +311,9 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         }
 
         if (ordenacao.size() != numeroDeVertices) {
-            throw new RuntimeException("O grafo contém um ciclo!");
+            //throw new RuntimeException("O grafo contém um ciclo!");
+            System.out.println("O grafo contém um ciclo!");
+            return null;
         }
 
         return ordenacao;
