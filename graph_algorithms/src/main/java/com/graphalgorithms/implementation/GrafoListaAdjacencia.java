@@ -13,7 +13,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
 
     /**
      * Construtor do grafo de adjacência
-     * 
+     *
      * @param numeroDeVertices Número de vértices do grafo (tipo int)
      * @param isDirecionado    Grafo direcionado (true), grafo NÃO direcionado
      *                         (false)
@@ -31,7 +31,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
 
     /**
      * Método para adicionar arestas sem peso
-     * 
+     *
      * @param origem  Vértice de origem da aresta
      * @param destino Vértice de destino da aresta
      * @return Retorna true se conseguiu adicionar a aresta e false se falhou
@@ -231,55 +231,90 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         System.out.println("\n");
     }
 
-    public void buscaLargura(int verticeInicial){
-        //Array para mostrar os vértices visitados
-        boolean[] visitado = new boolean[numeroDeVertices];
 
-        //Fila para armazenar os vértices a serem visitados
+    public void buscaLargura(int verticeInicial){
+        boolean[] visitado = new boolean[numeroDeVertices];
+        int[] nivel = new int[numeroDeVertices];
+        int[] pai = new int[numeroDeVertices];
         Queue<Integer> fila = new LinkedList<>();
 
-        //Marca o vértice inicial como visitado e o adiciona à fila
+        for (int i = 0; i < numeroDeVertices; i++) {
+            pai[i] = -1;
+        }
+
+        fila.add(verticeInicial);
         visitado[verticeInicial] = true;
-        fila.offer(verticeInicial);
+        nivel[verticeInicial] = 0;
 
-        System.out.print("(Lista de Adjacência) Busca por largura: ");
+        while (!fila.isEmpty()) {
+            int vertice = fila.poll();
+            System.out.println("Nível " + nivel[vertice] + ": " + vertice);
 
-        while(!fila.isEmpty()){
-            //Remove o vértice da frente da fila e o imprime
-            int verticeAtual = fila.poll();
-            System.out.print(verticeAtual + " ");
-
-            //Itera sobre todos os vizinhos do vértice atual
-            for(Aresta aresta : listaAdjacencia[verticeAtual]){
+            for (Aresta aresta : listaAdjacencia[vertice]) {
                 int vizinho = aresta.getDestino();
-                //Verifica se o vizinho não foi visitado
-                if(!visitado[vizinho]){
-                    //Marca o vizinho como visitado e o adiciona á fila
+                if (!visitado[vizinho]) {
+                    fila.add(vizinho);
                     visitado[vizinho] = true;
-                    fila.offer(vizinho);
+                    nivel[vizinho] = nivel[vertice] + 1;
+                    pai[vizinho] = vertice;
+                    System.out.println("Aresta pai encontrada: " + vertice + " -> " + vizinho);
+                } else {
+                    if (pai[vertice] != vizinho) {
+                        if (nivel[vertice] == nivel[vizinho]) {
+                            System.out.println("Aresta irmão encontrada: " + vertice + " -> " + vizinho);
+                        } else if (nivel[vertice] == nivel[vizinho] + 1) {
+                            System.out.println("Aresta tio encontrada: " + vertice + " -> " + vizinho);
+                        } else if (nivel[vertice] == nivel[vizinho] - 1) {
+                            System.out.println("Aresta primo encontrada: " + vertice + " -> " + vizinho);
+                        }
+                    }
                 }
-
             }
         }
     }
+
+
+
+//    public void buscaProfundidade(int vertice){
+//        boolean[] visitado = new boolean[numeroDeVertices];
+//        System.out.print("(Lista de Adjacência) Busca em Profundidade: ");
+//        buscaProfundidadeRecursivo(vertice, visitado);
+//    }
+//
+//    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado){
+//        visitado[vertice] = true;
+//        System.out.print(vertice + " ");
+//
+//        for(Aresta aresta : listaAdjacencia[vertice]){
+//            int vizinho = aresta.getDestino();
+//            if(!visitado[vizinho]){
+//                buscaProfundidadeRecursivo(vizinho, visitado);
+//            }
+//        }
+//    }
 
     public void buscaProfundidade(int vertice){
         boolean[] visitado = new boolean[numeroDeVertices];
         System.out.print("(Lista de Adjacência) Busca em Profundidade: ");
-        buscaProfundidadeRecursivo(vertice, visitado);
+        buscaProfundidadeRecursivo(vertice, visitado, 0);
     }
 
-    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado){
+    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado, int nivel){
         visitado[vertice] = true;
-        System.out.print(vertice + " ");
+        System.out.println("Nível " + nivel + ": " + vertice);
 
         for(Aresta aresta : listaAdjacencia[vertice]){
             int vizinho = aresta.getDestino();
             if(!visitado[vizinho]){
-                buscaProfundidadeRecursivo(vizinho, visitado);
+                buscaProfundidadeRecursivo(vizinho, visitado, nivel + 1);
+            } else {
+                System.out.println("Aresta de retorno encontrada: " + aresta.getOrigem() + " -> " + aresta.getDestino());
             }
         }
     }
+
+
+
 
     public List<Integer> ordenacaoTopologica() {
         int[] grauEntrada = new int[numeroDeVertices];

@@ -214,6 +214,7 @@ public class GrafoApplication {
                     } else {
                         grafo.buscaLargura(verticeInicial);
                         System.out.println();
+                        System.out.println("\n(Lista de Adjacência) Busca por Largura:");
                         grafoLista.buscaLargura(verticeInicial);
                     }
                     break;

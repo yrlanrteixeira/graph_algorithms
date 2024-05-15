@@ -231,51 +231,66 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         System.out.println("\n");
     }
 
-    public void buscaLargura(int verticeInicial) {
-        // Array para marcar os vértices visitados
+    public void buscaLargura(int verticeInicial){
         boolean[] visitado = new boolean[numeroDeVertices];
-
-        // Fila para armazenar os vértices a serem visitados
+        int[] nivel = new int[numeroDeVertices];
+        int[] pai = new int[numeroDeVertices];
         Queue<Integer> fila = new LinkedList<>();
 
-        //Marca o vértice inicial como visitado e o adiciona na fila
-        visitado[verticeInicial] = true;
-        fila.offer(verticeInicial);
+        for (int i = 0; i < numeroDeVertices; i++) {
+            pai[i] = -1;
+        }
 
-        System.out.print("(Matriz de Adjacência) Busca por largura: ");
+        fila.add(verticeInicial);
+        visitado[verticeInicial] = true;
+        nivel[verticeInicial] = 0;
 
         while (!fila.isEmpty()) {
-            //Remove o vértice da frente da fila e o imprime
-            int verticeAtual = fila.poll();
-            System.out.print(verticeAtual + " ");
+            int vertice = fila.poll();
+            System.out.println("Nível " + nivel[vertice] + ": " + vertice);
 
-            //Itera sobre todos os vizinhos do vértice atual
-            for (int vizinho = 0; vizinho < numeroDeVertices; vizinho++) {
-                //Verifica se o vizinho não foi visitado e se há uma aresta entre o vértice atual e o vizinho
-                if (!visitado[vizinho] && !matrizAdjacencia[verticeAtual][vizinho].isEmpty()) {
-                    visitado[vizinho] = true;
-                    fila.offer(vizinho);
+            for (int i = 0; i < numeroDeVertices; i++) {
+                if (!matrizAdjacencia[vertice][i].isEmpty() && !visitado[i]) {
+                    fila.add(i);
+                    visitado[i] = true;
+                    nivel[i] = nivel[vertice] + 1;
+                    pai[i] = vertice;
+                    System.out.println("Aresta pai encontrada: " + vertice + " -> " + i);
+                } else if (!matrizAdjacencia[vertice][i].isEmpty() && visitado[i] && pai[vertice] != i) {
+                    if (nivel[vertice] == nivel[i]) {
+                        System.out.println("Aresta irmão encontrada: " + vertice + " -> " + i);
+                    } else if (nivel[vertice] == nivel[i] + 1) {
+                        System.out.println("Aresta tio encontrada: " + vertice + " -> " + i);
+                    } else if (nivel[vertice] == nivel[i] - 1) {
+                        System.out.println("Aresta primo encontrada: " + vertice + " -> " + i);
+                    }
                 }
             }
         }
     }
 
-    public void buscaProfundidade(int vertice) {
+
+    public void buscaProfundidade(int vertice){
         boolean[] visitado = new boolean[numeroDeVertices];
         System.out.print("(Matriz de Adjacência) Busca em Profundidade: ");
-        buscaProfundidadeRecursivo(vertice, visitado);
+        buscaProfundidadeRecursivo(vertice, visitado, 0);
     }
 
-    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado) {
+    private void buscaProfundidadeRecursivo(int vertice, boolean[] visitado, int nivel){
         visitado[vertice] = true;
-        System.out.print(vertice + " ");
+        System.out.println("Nível " + nivel + ": " + vertice);
 
-        for (int vizinho = 0; vizinho < numeroDeVertices; vizinho++) {
-            if (!visitado[vizinho] && !matrizAdjacencia[vertice][vizinho].isEmpty()) {
-                buscaProfundidadeRecursivo(vizinho, visitado);
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                if (!visitado[i]) {
+                    buscaProfundidadeRecursivo(i, visitado, nivel + 1);
+                } else {
+                    System.out.println("Aresta de retorno encontrada: " + vertice + " -> " + i);
+                }
             }
         }
     }
+
 
     public List<Integer> ordenacaoTopologica() {
         int[] grauEntrada = new int[numeroDeVertices];
