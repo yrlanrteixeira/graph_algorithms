@@ -278,33 +278,42 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     }
 
     public List<Integer> ordenacaoTopologica() {
-        List<Integer> ordenacao = new ArrayList<>();
-        boolean[] visitado = new boolean[numeroDeVertices];
-        Stack<Integer> pilha = new Stack<>();
-
+        int[] grauEntrada = new int[numeroDeVertices];
         for (int i = 0; i < numeroDeVertices; i++) {
-            if (!visitado[i]) {
-                ordenacaoTopologicaRecursivo(i, visitado, pilha);
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (!matrizAdjacencia[i][j].isEmpty()) {
+                    grauEntrada[j]++;
+                }
             }
         }
 
-        while (!pilha.isEmpty()) {
-            ordenacao.add(pilha.pop());
+        Queue<Integer> fila = new LinkedList<>();
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (grauEntrada[i] == 0) {
+                fila.offer(i);
+            }
+        }
+
+        List<Integer> ordenacao = new ArrayList<>();
+        while (!fila.isEmpty()) {
+            int vertice = fila.poll();
+            ordenacao.add(vertice);
+
+            for (int i = 0; i < numeroDeVertices; i++) {
+                if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                    grauEntrada[i]--;
+                    if (grauEntrada[i] == 0) {
+                        fila.offer(i);
+                    }
+                }
+            }
+        }
+
+        if (ordenacao.size() != numeroDeVertices) {
+            throw new RuntimeException("O grafo contém um ciclo!");
         }
 
         return ordenacao;
-    }
-
-    private void ordenacaoTopologicaRecursivo(int vertice, boolean[] visitado, Stack<Integer> pilha) {
-        visitado[vertice] = true;
-
-        for (Aresta aresta : matrizAdjacencia[vertice][vertice]) {
-            int vizinho = aresta.getDestino();
-            if (!visitado[vizinho]) {
-                ordenacaoTopologicaRecursivo(vizinho, visitado, pilha);
-            }
-        }
-        pilha.push(vertice);
     }
 
     public void prim(int verticeInicial) {

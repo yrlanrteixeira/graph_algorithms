@@ -91,7 +91,7 @@ public class GrafoApplication {
                     System.out.print("--> Digite o vértice de destino da aresta: ");
                     destino = scanner.nextInt();
 
-                    if(!isPonderado){
+                    if (!isPonderado) {
                         if (grafo.removerAresta(origem, destino) && grafoLista.removerAresta(origem, destino)) {
                             System.out.println("\nAresta removida!\n");
                         } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
@@ -102,7 +102,7 @@ public class GrafoApplication {
                         System.out.print("--> Digite o peso da aresta que deseja remover: ");
                         int peso = scanner.nextInt();
 
-                        if(grafo.removerAresta(origem, destino, peso) && grafoLista.removerAresta(origem, destino, peso)){
+                        if (grafo.removerAresta(origem, destino, peso) && grafoLista.removerAresta(origem, destino, peso)) {
                             System.out.println("\nAresta removida!\n");
                         } else if (!grafo.removerAresta(origem, destino) && !grafoLista.removerAresta(origem, destino)) {
                             System.out.println(
@@ -156,7 +156,7 @@ public class GrafoApplication {
                     int[] grausLista = grafoLista.getGrau(vertice);
                     int[] grauMatriz = grafo.getGrau(vertice);
 
-                    if(!isDirecionado){
+                    if (!isDirecionado) {
                         System.out.println("(Lista de Adjacência) Grau do vértice " + vertice + ": " + grausLista[0]);
                         System.out.println("(Matriz de Adjecência) Grau do vértice " + vertice + ": " + grauMatriz[0]);
                     } else {
@@ -237,7 +237,7 @@ public class GrafoApplication {
                 // TESTE DE GRAFO CONEXO
                 case 10:
                     System.out.println("| 10. Teste grafo conexo                                           |");
-                    if(grafo.isConexo() && grafoLista.isConexo()){
+                    if (grafo.isConexo() && grafoLista.isConexo()) {
                         System.out.println("O grafo é conexo !");
                     } else {
                         System.out.println("O grafo NÃO é conexo !");
@@ -248,18 +248,22 @@ public class GrafoApplication {
                 // ORDENAÇÃO TOPOLÓGICA
                 case 11:
                     System.out.println("| 11. Ordenação Topológica                                         |");
-                    System.out.print("(Matriz de Adjacência) Ordenação Topológica: ");
-                    List<Integer> ordenacao = grafo.ordenacaoTopologica();
-                    for(int v : ordenacao){
-                        System.out.print(v + " ");
-                    }
+                    if (isDirecionado) {
+                        System.out.print("(Matriz de Adjacência) Ordenação Topológica: ");
+                        List<Integer> ordenacao = grafo.ordenacaoTopologica();
+                        for (int v : ordenacao) {
+                            System.out.print(v + " ");
+                        }
 
-                    System.out.println(" ");
+                        System.out.println(" ");
 
-                    System.out.print("(Lista de Adjacência) Ordenação Topológica: ");
-                    List<Integer> ordenacaoLista = grafoLista.ordenacaoTopologica();
-                    for(int v : ordenacaoLista){
-                        System.out.print(v + " ");
+                        System.out.print("(Lista de Adjacência) Ordenação Topológica: ");
+                        List<Integer> ordenacaoLista = grafoLista.ordenacaoTopologica();
+                        for (int v : ordenacaoLista) {
+                            System.out.print(v + " ");
+                        }
+                    } else{
+                        System.out.println("O grafo não é direcionado!");
                     }
                     break;
 
