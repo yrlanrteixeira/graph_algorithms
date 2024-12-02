@@ -1,4 +1,4 @@
-package main.java.com.graphalgorithms.implementation;
+package com.graphalgorithms.implementation;
 
 import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
 import main.java.com.graphalgorithms.utils.Aresta;
@@ -63,13 +63,17 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
     @Override
     public boolean removerAresta(int origem, int destino, int peso) {
         if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
-            // Verifica se há uma aresta entre origem e destino
+            boolean arestaRemovida = false;
+
+            // Remove a aresta da origem para o destino
             for (Aresta aresta : listaAdjacencia[origem]) {
                 if (aresta.getDestino() == destino && aresta.getPeso() == peso) {
                     listaAdjacencia[origem].remove(aresta);
+                    arestaRemovida = true;
                     break;
                 }
             }
+
             // Se o grafo não for direcionado, remove a aresta do destino para a origem
             if (!isDirecionado) {
                 for (Aresta aresta : listaAdjacencia[destino]) {
@@ -79,7 +83,8 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
                     }
                 }
             }
-            return true;
+
+            return arestaRemovida;
         }
         return false;
     }
@@ -211,6 +216,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
                 }
             }
         }
+        System.out.println("Lista de Adjacência: \n");
         return true;
     }
 
@@ -615,6 +621,43 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
         recStack[vertice] = false;
         caminhoAtual.remove(caminhoAtual.size() - 1);
     }
+
+    public boolean isEuleriano() {
+        if (!isConexo()) {
+            return false;
+        }
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!isDirecionado && getGrau(i)[0] % 2 != 0) {
+                return false;
+            } else if (isDirecionado && getGrau(i)[0] != getGrau(i)[1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int[] dijkstraTodos(int verticeInicial) {
+        int[] dist = new int[numeroDeVertices];
+        boolean[] visitado = new boolean[numeroDeVertices];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, visitado);
+            visitado[u] = true;
+
+            for (Aresta aresta : listaAdjacencia[u]) {
+                int v = aresta.getDestino();
+                if (!visitado[v] && dist[u] != Integer.MAX_VALUE && dist[u] + aresta.getPeso() < dist[v]) {
+                    dist[v] = dist[u] + aresta.getPeso();
+                }
+            }
+        }
+        return dist;
+    }
+
+
 
 
 

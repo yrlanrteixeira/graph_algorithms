@@ -1,4 +1,4 @@
-package main.java.com.graphalgorithms.implementation;
+package com.graphalgorithms.implementation;
 
 import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
 import main.java.com.graphalgorithms.utils.Aresta;
@@ -205,7 +205,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
                 }
             }
         }
-        System.out.println("Matriz Bipartido");
+        System.out.println("Matriz Grafo Bipartido: \n");
         return true;
     }
 
@@ -583,6 +583,47 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         recStack[vertice] = false;
         caminhoAtual.remove(caminhoAtual.size() - 1);
     }
+
+    public boolean isEuleriano() {
+        if (!isConexo()) {
+            return false;
+        }
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            int[] grau = getGrau(i);
+            if (!isDirecionado && grau[0] % 2 != 0) {
+                return false;
+            } else if (isDirecionado && grau[0] != grau[1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int[] dijkstraTodos(int verticeInicial) {
+        int[] dist = new int[numeroDeVertices];
+        boolean[] visitado = new boolean[numeroDeVertices];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, visitado);
+            visitado[u] = true;
+
+            for (int v = 0; v < numeroDeVertices; v++) {
+                if (!matrizAdjacencia[u][v].isEmpty() && !visitado[v] && dist[u] != Integer.MAX_VALUE &&
+                        dist[u] + matrizAdjacencia[u][v].get(0).getPeso() < dist[v]) {
+                    dist[v] = dist[u] + matrizAdjacencia[u][v].get(0).getPeso();
+                }
+            }
+        }
+        return dist;
+    }
+
+
+
+
+
 
 
 
