@@ -20,6 +20,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
      */
     @SuppressWarnings("unchecked")
     public GrafoListaAdjacencia(int numeroDeVertices, boolean isDirecionado) {
+        super(numeroDeVertices);
         this.numeroDeVertices = numeroDeVertices;
         this.isDirecionado = isDirecionado;
         this.listaAdjacencia = new LinkedList[numeroDeVertices];
@@ -530,5 +531,19 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
             }
         }
     }
+
+
+    @Override
+    public boolean saoAdjacentes(int origem, int destino) {
+        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
+            for (Aresta aresta : listaAdjacencia[origem]) {
+                if (aresta.getDestino() == destino) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -12,6 +12,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     private final List<Aresta>[][] matrizAdjacencia;
 
     public GrafoMatrizAdjacencia(int numeroDeVertices, boolean isDirecionado) {
+        super(numeroDeVertices);
         this.numeroDeVertices = numeroDeVertices;
         this.isDirecionado = isDirecionado;
         matrizAdjacencia = new ArrayList[numeroDeVertices][numeroDeVertices];
@@ -495,5 +496,16 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
             }
         }
     }
+
+
+    @Override
+    public boolean saoAdjacentes(int origem, int destino) {
+        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
+            // Verifica se há pelo menos uma aresta entre origem e destino
+            return !matrizAdjacencia[origem][destino].isEmpty();
+        }
+        return false;
+    }
+
 
 }

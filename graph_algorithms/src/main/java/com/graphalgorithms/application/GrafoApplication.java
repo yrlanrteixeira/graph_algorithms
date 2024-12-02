@@ -44,7 +44,8 @@ public class GrafoApplication {
             System.out.println("| 12. Árvore Geradora Mínima (Prim)                                |");
             System.out.println("| 13. Árvore Geradora Mínima (Kruskal)                             |");
             System.out.println("| 14. Caminho mínimo entre dois vértices (Dijkstra)                |");
-            System.out.println("| 15. Sair                                                         |");
+            System.out.println("| 15. Verificar adjacência entre dois vértices                     |");
+            System.out.println("| 16. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -263,7 +264,7 @@ public class GrafoApplication {
                         for (int v : ordenacaoLista) {
                             System.out.print(v + " ");
                         }
-                    } else{
+                    } else {
                         System.out.println("O grafo não é direcionado!");
                     }
                     break;
@@ -303,8 +304,24 @@ public class GrafoApplication {
                     grafoLista.dijkstra(origemDijkstra, destinoDijkstra);
                     break;
 
-                // SAIR
                 case 15:
+                    System.out.println("| Verificar adjacência entre dois vértices                    |\n");
+                    System.out.print("--> Digite o vértice de origem: ");
+                    origem = scanner.nextInt();
+                    System.out.print("--> Digite o vértice de destino: ");
+                    destino = scanner.nextInt();
+
+                    boolean adjacenteMatriz = grafo.saoAdjacentes(origem, destino);
+                    boolean adjacenteLista = grafoLista.saoAdjacentes(origem, destino);
+
+                    System.out.println("(Matriz de Adjacência) Os vértices " + origem + " e " + destino +
+                            (adjacenteMatriz ? " são adjacentes." : " NÃO são adjacentes."));
+                    System.out.println("(Lista de Adjacência) Os vértices " + origem + " e " + destino +
+                            (adjacenteLista ? " são adjacentes." : " NÃO são adjacentes."));
+                    break;
+
+                // SAIR
+                case 16:
                     continuar = false;
                     break;
 
