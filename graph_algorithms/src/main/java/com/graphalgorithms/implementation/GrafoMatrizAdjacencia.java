@@ -1,7 +1,7 @@
 package com.graphalgorithms.implementation;
 
-import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
-import main.java.com.graphalgorithms.utils.Aresta;
+import com.graphalgorithms.abstracts.GrafoAbstrato;
+import com.graphalgorithms.utils.Aresta;
 
 import java.util.*;
 

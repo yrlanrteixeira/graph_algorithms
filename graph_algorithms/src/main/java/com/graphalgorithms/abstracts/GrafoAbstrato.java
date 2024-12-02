@@ -1,6 +1,8 @@
-package main.java.com.graphalgorithms.abstracts;
+package com.graphalgorithms.abstracts;
 
-import main.java.com.graphalgorithms.interfaces.Grafo;
+import com.graphalgorithms.interfaces.Grafo;
+
+import java.util.List;
 
 public abstract class GrafoAbstrato implements Grafo {
     protected int numeroDeVertices;
@@ -58,6 +60,10 @@ public abstract class GrafoAbstrato implements Grafo {
 
     @Override
     public abstract boolean removerAresta(int origem, int destino);
+
+    public abstract List<Integer> getVizinhos(int vertice);
+
+    public abstract List<Integer> getSucessores(int vertice);
 
     public abstract boolean saoAdjacentes(int origem, int destino);
 }

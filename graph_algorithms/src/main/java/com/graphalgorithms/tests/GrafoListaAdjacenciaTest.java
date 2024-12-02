@@ -1,12 +1,11 @@
 package com.graphalgorithms.tests;
 
-import main.java.com.graphalgorithms.implementation.GrafoListaAdjacencia;
-
+import com.graphalgorithms.implementation.GrafoListaAdjacencia;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GrafoListaAdjacenciaTest {
 
