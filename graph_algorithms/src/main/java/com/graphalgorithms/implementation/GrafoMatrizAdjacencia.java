@@ -507,5 +507,84 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         return false;
     }
 
+    public boolean temCiclo() {
+        boolean[] visitado = new boolean[numeroDeVertices];
+        boolean[] recStack = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (temCicloRecursivo(i, visitado, recStack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean temCicloRecursivo(int vertice, boolean[] visitado, boolean[] recStack) {
+        if (recStack[vertice]) {
+            return true;
+        }
+        if (visitado[vertice]) {
+            return false;
+        }
+        visitado[vertice] = true;
+        recStack[vertice] = true;
+
+        // Itera sobre os possíveis destinos do vértice atual na matriz de adjacência
+        for (int i = 0; i < numeroDeVertices; i++) {
+            // Se houver uma aresta (peso maior que zero) entre `vertice` e `i`
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                if (temCicloRecursivo(i, visitado, recStack)) {
+                    return true;
+                }
+            }
+        }
+        recStack[vertice] = false;
+        return false;
+    }
+
+    public List<List<Integer>> getCiclos() {
+        List<List<Integer>> ciclos = new ArrayList<>();
+        boolean[] visitado = new boolean[numeroDeVertices];
+        boolean[] recStack = new boolean[numeroDeVertices];
+        List<Integer> caminhoAtual = new ArrayList<>();
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visitado[i]) {
+                getCiclosRecursivo(i, visitado, recStack, caminhoAtual, ciclos);
+            }
+        }
+        return ciclos;
+    }
+
+    private void getCiclosRecursivo(int vertice, boolean[] visitado, boolean[] recStack,
+                                    List<Integer> caminhoAtual, List<List<Integer>> ciclos) {
+        if (recStack[vertice]) {
+            // Ciclo encontrado: adiciona o caminho atual ao resultado
+            int cicloInicio = caminhoAtual.indexOf(vertice);
+            ciclos.add(new ArrayList<>(caminhoAtual.subList(cicloInicio, caminhoAtual.size())));
+            return;
+        }
+
+        if (visitado[vertice]) {
+            return;
+        }
+
+        visitado[vertice] = true;
+        recStack[vertice] = true;
+        caminhoAtual.add(vertice);
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                getCiclosRecursivo(i, visitado, recStack, caminhoAtual, ciclos);
+            }
+        }
+
+        // Remove o vértice atual da pilha de recursão e do caminho
+        recStack[vertice] = false;
+        caminhoAtual.remove(caminhoAtual.size() - 1);
+    }
+
+
+
 
 }

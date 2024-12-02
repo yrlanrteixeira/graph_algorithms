@@ -45,7 +45,9 @@ public class GrafoApplication {
             System.out.println("| 13. Árvore Geradora Mínima (Kruskal)                             |");
             System.out.println("| 14. Caminho mínimo entre dois vértices (Dijkstra)                |");
             System.out.println("| 15. Verificar adjacência entre dois vértices                     |");
-            System.out.println("| 16. Sair                                                         |");
+            System.out.println("| 16. Verificar se o grafo contém ciclos                           |");
+            System.out.println("| 17. Exibir todos os ciclos do grafo                              |");
+            System.out.println("| 18. Sair                                                         |");
             System.out.println("|                                                                  |");
             System.out.println("##----------------------------------------------------------------##\n");
             System.out.print("--> Digite o número de uma opção: ");
@@ -304,6 +306,7 @@ public class GrafoApplication {
                     grafoLista.dijkstra(origemDijkstra, destinoDijkstra);
                     break;
 
+                // VERIFICAR ADJACÊNCIA ENTRE DOIS VÉRTICES
                 case 15:
                     System.out.println("| Verificar adjacência entre dois vértices                    |\n");
                     System.out.print("--> Digite o vértice de origem: ");
@@ -319,9 +322,48 @@ public class GrafoApplication {
                     System.out.println("(Lista de Adjacência) Os vértices " + origem + " e " + destino +
                             (adjacenteLista ? " são adjacentes." : " NÃO são adjacentes."));
                     break;
+                // VERIFICAR SE O GRAFO CONTÉM CICLOS
+                case 16:
+                    System.out.println("| Verificar se o grafo contém ciclos                          |\n");
+                    System.out.println("Matriz de Adjacência: ");
+                    if (grafo.temCiclo()) {
+                        System.out.println("(Matriz de Adjacência) O grafo contém ciclos!");
+                    } else {
+                        System.out.println("(Matriz de Adjacência) O grafo NÃO contém ciclos!");
+                    }
+                    if (grafoLista.temCiclo()) {
+                        System.out.println("(Lista de Adjacência) O grafo contém ciclos!");
+                    } else {
+                        System.out.println("(Lista de Adjacência) O grafo NÃO contém ciclos!");
+                    }
+                    break;
+                // EXIBIR TODOS OS CICLOS DO GRAFO (MATRIZ E LISTA DE ADJACÊNCIA)
+                case 17:
+                    System.out.println("| Exibir todos os ciclos do grafo                            |");
+                    System.out.println("(Matriz de Adjacência):");
+                    List<List<Integer>> ciclosMatriz = grafo.getCiclos();
+                    if (ciclosMatriz.isEmpty()) {
+                        System.out.println("Nenhum ciclo encontrado na Matriz de Adjacência.");
+                    } else {
+                        for (List<Integer> ciclo : ciclosMatriz) {
+                            System.out.println("Ciclo encontrado: " + ciclo);
+                        }
+                    }
+
+                    System.out.println("\n(Lista de Adjacência):");
+                    List<List<Integer>> ciclosLista = grafoLista.getCiclos();
+                    if (ciclosLista.isEmpty()) {
+                        System.out.println("Nenhum ciclo encontrado na Lista de Adjacência.");
+                    } else {
+                        for (List<Integer> ciclo : ciclosLista) {
+                            System.out.println("Ciclo encontrado: " + ciclo);
+                        }
+                    }
+                    break;
+
 
                 // SAIR
-                case 16:
+                case 18:
                     continuar = false;
                     break;
 
