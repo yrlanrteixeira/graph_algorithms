@@ -11,8 +11,10 @@ o projeto (Execute o arquivo que está no diretório graph_algorithms/src/main/j
 
 ## Como funciona o programa?
 
-Quando estiver em execução, primeiramente ele irá te pedir para definir o número de vértices do grafo e o direcionamento dele. Caso seja direcionado digite true e para não direcionado 
-digite false. Caso seja ponderado digite true e caso não seja digite false.
+1. Ao iniciar, o programa solicitará:
+- O número de vértices do grafo.
+- Se o grafo é **direcionado** (true/false).
+- Se o grafo é **ponderado** (true/false).
 
 ### Menu
 
@@ -20,76 +22,73 @@ Após definir o número de vértices e o direcionamento do grafo, irá aparecer 
 predecessores, grau de um vértice, informações do grafo (Simples, regular, completo e bipartido), imprimir grafo, sair e entre outras.
 
 
-1. **Adicionar Aresta:**
-    - Esta opção permite adicionar uma aresta ao grafo.
-    - Após escolher a opção 1, você será solicitado a digitar o vértice de origem e o vértice de destino da aresta. Se o grafo for ponderado, você também precisará inserir o peso da aresta.
+## Funcionalidades do Menu
 
+1. **Adicionar Aresta:**
+- Adicione uma aresta entre dois vértices. Insira o vértice de origem, o vértice de destino e, se for ponderado, o peso da aresta.
 
 2. **Remover Aresta:**
-    - Esta opção permite remover uma aresta do grafo.
-    - Após escolher a opção 2, você precisará digitar o vértice de origem e o vértice de destino da aresta que deseja remover. Se o grafo for ponderado, também será solicitado o peso da aresta.
+- Remova uma aresta entre dois vértices. Insira o vértice de origem, o vértice de destino e, se for ponderado, o peso da aresta.
 
+3. **Imprimir Grafo:**
+- Exibe o grafo em suas representações de matriz de adjacência e lista de adjacência.
 
-3. **Vizinhança de um Vértice (Grafo Não Direcionado):**
-    - Esta opção mostra os vizinhos de um vértice em um grafo não direcionado.
-    - Ao escolher a opção 3, digite o número do vértice para o qual deseja obter a vizinhança.
+4. **Verificar Todas as Propriedades:**
+- Verifica se o grafo é simples, regular, completo e bipartido.
 
+5. **Verificar se é Simples:**
+- Confirma se o grafo não possui laços ou arestas múltiplas.
 
-4. **Sucessores e Predecessores de um Vértice (Grafo Direcionado):**
-    - Esta opção mostra os sucessores e predecessores de um vértice em um grafo direcionado.
-    - Ao selecionar a opção 4, digite o número do vértice para o qual deseja obter os sucessores e predecessores.
+6. **Verificar se é Regular:**
+- Verifica se todos os vértices possuem o mesmo grau.
 
+7. **Verificar se é Completo:**
+- Determina se todos os vértices estão conectados diretamente entre si.
 
-5. **Grau de um Vértice:**
-    - Esta opção exibe o grau de um vértice.
-    - Após escolher a opção 5, digite o número do vértice para o qual deseja obter o grau.
+8. **Verificar se é Bipartido:**
+- Verifica se o grafo é bipartido.
 
+9. **Buscar Vértices (Sucessores, Predecessores, Grau):**
+- Exibe os sucessores, predecessores e o grau de um vértice especificado.
 
-6. **Informações do Grafo (Simples, Regular, Completo e Bipartido):**
-    - Esta opção fornece informações sobre o grafo, incluindo se é simples, regular, completo e bipartido.
-    - Basta selecionar a opção 6 no menu, e o programa verificará automaticamente essas propriedades do grafo.
+10. **Verificar Conectividade:**
+ - Determina se o grafo é conexo.
 
+11. **Executar Busca em Largura:**
+ - Realiza a busca em largura a partir de um vértice inicial.
 
-7. **Imprimir Grafo (Matriz e Lista de Adjacência):**
-    - Esta opção imprime o grafo em sua representação por matriz de adjacência e por lista de adjacência.
-    - Basta escolher a opção 7 no menu para visualizar as representações.
+12. **Executar Busca em Profundidade:**
+ - Realiza a busca em profundidade a partir de um vértice inicial.
 
+13. **Executar Ordenação Topológica:**
+ - Realiza a ordenação topológica do grafo, se aplicável.
 
-8. **Busca por Largura:**
-    - Esta opção realiza a busca por largura no grafo a partir de um vértice inicial.
-    - Após selecionar a opção 8, insira o vértice inicial da busca.
+14. **Encontrar Ciclos no Grafo:**
+ - Identifica e exibe os ciclos existentes no grafo.
 
+15. **Encontrar Caminho Mínimo (Dijkstra):**
+ - Calcula o caminho mínimo entre dois vértices usando o algoritmo de Dijkstra.
 
-9. **Busca por Profundidade:**
-    - Esta opção realiza a busca por profundidade no grafo a partir de um vértice inicial.
-    - Após escolher a opção 9, insira o vértice inicial da busca.
+16. **Árvore Geradora Mínima (Prim):**
+ - Encontra a árvore geradora mínima usando o algoritmo de Prim.
 
+17. **Árvore Geradora Mínima (Kruskal):**
+ - Encontra a árvore geradora mínima usando o algoritmo de Kruskal.
 
-10. **Teste de Grafo Conexo:**
-    - Esta opção verifica se o grafo é conexo.
-    - Basta selecionar a opção 10 no menu, e o programa informará se o grafo é ou não conexo.
+18. **Verificar se é Euleriano:**
+ - Determina se o grafo é Euleriano.
 
+19. **Definir ou Consultar Peso de Vértices:**
+ - Define ou consulta o peso de um vértice.
 
-11. **Ordenação Topológica:**
-    - Esta opção realiza a ordenação topológica do grafo.
-    - Ao escolher a opção 11, o programa exibirá a ordenação topológica do grafo.
+20. **Executar Floyd-Warshall:**
+ - Calcula as distâncias mínimas entre todos os pares de vértices.
 
+21. **Executar Dijkstra para Todos os Vértices (Matriz de Adjacência):**
+ - Calcula os caminhos mínimos de um vértice inicial para todos os outros vértices, usando matriz de adjacência.
 
-12. **Árvore Geradora Mínima (Prim):**
-    - Esta opção encontra a árvore geradora mínima do grafo usando o algoritmo de Prim.
-    - Após selecionar a opção 12, insira o vértice inicial para o algoritmo de Prim.
+22. **Executar Dijkstra para Todos os Vértices (Lista de Adjacência):**
+ - Calcula os caminhos mínimos de um vértice inicial para todos os outros vértices, usando lista de adjacência.
 
-
-13. **Árvore Geradora Mínima (Kruskal):**
-    - Esta opção encontra a árvore geradora mínima do grafo usando o algoritmo de Kruskal.
-    - Ao escolher a opção 13, o programa exibirá a árvore geradora mínima encontrada.
-
-
-14. **Caminho Mínimo entre Dois Vértices (Dijkstra):**
-    - Esta opção encontra o caminho mínimo entre dois vértices usando o algoritmo de Dijkstra.
-    - Após selecionar a opção 14, insira o vértice de origem e o vértice de destino.
-
-
-15. **Sair:**
-    - Esta opção encerra a execução do programa.
-
+23. **Sair:**
+ - Encerra a execução do programa.
