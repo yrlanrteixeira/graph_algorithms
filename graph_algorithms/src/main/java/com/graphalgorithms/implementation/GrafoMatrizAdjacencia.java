@@ -70,6 +70,38 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     }
 
     @Override
+    public int[][] floydWarshall() {
+        int[][] dist = new int[numeroDeVertices][numeroDeVertices];
+
+        // Inicializa a matriz de distâncias com os pesos das arestas
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (i == j) {
+                    dist[i][j] = 0; // Distância de um vértice para ele mesmo é 0
+                } else if (!matrizAdjacencia[i][j].isEmpty()) {
+                    dist[i][j] = matrizAdjacencia[i][j].get(0).getPeso(); // Peso da aresta
+                } else {
+                    dist[i][j] = Integer.MAX_VALUE; // Sem aresta, distância infinita
+                }
+            }
+        }
+
+        // Aplica o algoritmo de Floyd-Warshall
+        for (int k = 0; k < numeroDeVertices; k++) {
+            for (int i = 0; i < numeroDeVertices; i++) {
+                for (int j = 0; j < numeroDeVertices; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE
+                            && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        return dist;
+    }
+
+    @Override
     public int getNumeroDeVertices() {
         return numeroDeVertices;
     }
@@ -619,13 +651,5 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
         }
         return dist;
     }
-
-
-
-
-
-
-
-
 
 }

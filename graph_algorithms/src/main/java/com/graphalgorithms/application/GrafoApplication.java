@@ -51,6 +51,10 @@ public class GrafoApplication {
                 case 16 -> encontrarArvoreGeradoraPrim(scanner, grafoMatriz, grafoLista);
                 case 17 -> encontrarArvoreGeradoraKruskal(grafoMatriz, grafoLista);
                 case 18 -> verificarEuleriano(grafoMatriz, grafoLista);
+                case 19 -> manipularPesosVertices(scanner, grafoMatriz, grafoLista);
+                case 20 -> executarFloydWarshall(grafoMatriz, grafoLista);
+                case 21 -> executarDijkstraTodos(scanner, grafoMatriz);
+                case 22 -> executarDijkstraTodosLista(scanner, grafoLista);
                 case 0 -> {
                     System.out.println("Saindo...");
                     continuar = false;
@@ -81,6 +85,10 @@ public class GrafoApplication {
         System.out.println("| 16. Encontrar árvore geradora mínima (Prim)                      |");
         System.out.println("| 17. Encontrar árvore geradora mínima (Kruskal)                   |");
         System.out.println("| 18. Verificar se o grafo é Euleriano                             |");
+        System.out.println("| 19. Definir ou consultar peso de vértices                        |");
+        System.out.println("| 20. Executar Floyd-Warshall                                      |");
+        System.out.println("| 21. Executar Djikstra para todos os vértices (Matriz de Adjacência)|");
+        System.out.println("| 22. Executar Djikstra para todos os vértices (Lista de Adjacência)|");
         System.out.println("| 0. Sair                                                          |");
         System.out.println("##----------------------------------------------------------------##");
     }
@@ -244,4 +252,94 @@ public class GrafoApplication {
         System.out.println("O grafo é Euleriano? (Matriz de Adjacência): " + grafoMatriz.isEuleriano());
         System.out.println("O grafo é Euleriano? (Lista de Adjacência): " + grafoLista.isEuleriano());
     }
+
+    private static void manipularPesosVertices(Scanner scanner, GrafoMatrizAdjacencia grafoMatriz, GrafoListaAdjacencia grafoLista) {
+        System.out.println("| 19. Definir ou consultar peso de vértices                        |\n");
+        System.out.print("--> Digite o índice do vértice: ");
+        int vertice = scanner.nextInt();
+
+        System.out.println("Escolha uma ação:");
+        System.out.println("1. Definir peso do vértice");
+        System.out.println("2. Consultar peso do vértice");
+        System.out.print("--> Digite a opção: ");
+        int opcao = scanner.nextInt();
+
+        switch (opcao) {
+            case 1 -> {
+                System.out.print("--> Digite o peso para o vértice: ");
+                int peso = scanner.nextInt();
+                try {
+                    grafoMatriz.setPesoVertice(vertice, peso);
+                    grafoLista.setPesoVertice(vertice, peso);
+                    System.out.println("\nPeso do vértice definido com sucesso!\n");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("\n[ERRO] " + e.getMessage() + "\n");
+                }
+            }
+            case 2 -> {
+                try {
+                    int pesoMatriz = grafoMatriz.getPesoVertice(vertice);
+                    int pesoLista = grafoLista.getPesoVertice(vertice);
+                    System.out.println("\nPeso do vértice (Matriz): " + pesoMatriz);
+                    System.out.println("Peso do vértice (Lista): " + pesoLista + "\n");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("\n[ERRO] " + e.getMessage() + "\n");
+                }
+            }
+            default -> System.out.println("\n[ERRO] Opção inválida! Tente novamente.\n");
+        }
+    }
+
+    private static void executarFloydWarshall(GrafoMatrizAdjacencia grafoMatriz, GrafoListaAdjacencia grafoLista) {
+        System.out.println("| 20. Executar Floyd-Warshall                                      |\n");
+
+        System.out.println("(Matriz de Adjacência):");
+        int[][] distMatriz = grafoMatriz.floydWarshall();
+        imprimirMatrizDistancias(distMatriz);
+
+        System.out.println("(Lista de Adjacência):");
+        int[][] distLista = grafoLista.floydWarshall();
+        imprimirMatrizDistancias(distLista);
+    }
+
+    private static void imprimirMatrizDistancias(int[][] dist) {
+        int n = dist.length;
+        System.out.println("Matriz de distâncias:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][j] == Integer.MAX_VALUE) {
+                    System.out.print("INF ");
+                } else {
+                    System.out.print(dist[i][j] + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    private static void executarDijkstraTodos(Scanner scanner, GrafoMatrizAdjacencia grafo) {
+        System.out.print("--> Digite o vértice inicial para calcular as menores distâncias: ");
+        int verticeInicial = scanner.nextInt();
+        int[] distancias = grafo.dijkstraTodos(verticeInicial);
+
+        System.out.println("Menores distâncias do vértice " + verticeInicial + " para os outros vértices:");
+        for (int i = 0; i < distancias.length; i++) {
+            System.out.println("Vértice " + i + ": " + (distancias[i] == Integer.MAX_VALUE ? "Infinito" : distancias[i]));
+        }
+    }
+
+    private static void executarDijkstraTodosLista(Scanner scanner, GrafoListaAdjacencia grafo) {
+        System.out.print("--> Digite o vértice inicial para calcular as menores distâncias: ");
+        int verticeInicial = scanner.nextInt();
+        int[] distancias = grafo.dijkstraTodos(verticeInicial);
+
+        System.out.println("Menores distâncias do vértice " + verticeInicial + " para os outros vértices:");
+        for (int i = 0; i < distancias.length; i++) {
+            System.out.println("Vértice " + i + ": " + (distancias[i] == Integer.MAX_VALUE ? "Infinito" : distancias[i]));
+        }
+    }
+
+
+
+
 }
