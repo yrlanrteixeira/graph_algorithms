@@ -1,8 +1,6 @@
-package main.java.com.graphalgorithms.interfaces;
+package com.graphalgorithms.interfaces;
 
 import java.util.List;
-
-import main.java.com.graphalgorithms.utils.Aresta;
 
 public interface Grafo {
 

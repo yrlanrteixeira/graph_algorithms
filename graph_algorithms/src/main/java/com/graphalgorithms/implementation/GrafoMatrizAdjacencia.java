@@ -1,17 +1,17 @@
-package main.java.com.graphalgorithms.implementation;
+package com.graphalgorithms.implementation;
 
-import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
-import main.java.com.graphalgorithms.utils.Aresta;
+import com.graphalgorithms.abstracts.GrafoAbstrato;
+import com.graphalgorithms.utils.Aresta;
 
 import java.util.*;
 
 public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     private final int numeroDeVertices;
     private final boolean isDirecionado;
-
     private final List<Aresta>[][] matrizAdjacencia;
 
     public GrafoMatrizAdjacencia(int numeroDeVertices, boolean isDirecionado) {
+        super(numeroDeVertices);
         this.numeroDeVertices = numeroDeVertices;
         this.isDirecionado = isDirecionado;
         matrizAdjacencia = new ArrayList[numeroDeVertices][numeroDeVertices];
@@ -66,6 +66,38 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
             }
         }
         return false;
+    }
+
+    @Override
+    public int[][] floydWarshall() {
+        int[][] dist = new int[numeroDeVertices][numeroDeVertices];
+
+        // Inicializa a matriz de distâncias com os pesos das arestas
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (i == j) {
+                    dist[i][j] = 0; // Distância de um vértice para ele mesmo é 0
+                } else if (!matrizAdjacencia[i][j].isEmpty()) {
+                    dist[i][j] = matrizAdjacencia[i][j].get(0).getPeso(); // Peso da aresta
+                } else {
+                    dist[i][j] = Integer.MAX_VALUE; // Sem aresta, distância infinita
+                }
+            }
+        }
+
+        // Aplica o algoritmo de Floyd-Warshall
+        for (int k = 0; k < numeroDeVertices; k++) {
+            for (int i = 0; i < numeroDeVertices; i++) {
+                for (int j = 0; j < numeroDeVertices; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE
+                            && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        return dist;
     }
 
     @Override
@@ -204,7 +236,7 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
                 }
             }
         }
-        System.out.println("Matriz Bipartido");
+        System.out.println("Matriz Grafo Bipartido: \n");
         return true;
     }
 
@@ -494,6 +526,122 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
                 dfs(i, visitado);
             }
         }
+    }
+
+
+    @Override
+    public boolean saoAdjacentes(int origem, int destino) {
+        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
+            // Verifica se há pelo menos uma aresta entre origem e destino
+            return !matrizAdjacencia[origem][destino].isEmpty();
+        }
+        return false;
+    }
+
+    public boolean temCiclo() {
+        boolean[] visitado = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visitado[i] && temCicloRecursivo(i, visitado, -1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean temCicloRecursivo(int vertice, boolean[] visitado, int pai) {
+        visitado[vertice] = true;
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                if (!visitado[i]) {
+                    if (temCicloRecursivo(i, visitado, vertice)) {
+                        return true;
+                    }
+                } else if (i != pai) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<List<Integer>> getCiclos() {
+        List<List<Integer>> ciclos = new ArrayList<>();
+        boolean[] visitado = new boolean[numeroDeVertices];
+        boolean[] recStack = new boolean[numeroDeVertices];
+        List<Integer> caminhoAtual = new ArrayList<>();
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visitado[i]) {
+                getCiclosRecursivo(i, visitado, recStack, caminhoAtual, ciclos);
+            }
+        }
+        return ciclos;
+    }
+
+    private void getCiclosRecursivo(int vertice, boolean[] visitado, boolean[] recStack,
+                                    List<Integer> caminhoAtual, List<List<Integer>> ciclos) {
+        if (recStack[vertice]) {
+            // Ciclo encontrado: adiciona o caminho atual ao resultado
+            int cicloInicio = caminhoAtual.indexOf(vertice);
+            ciclos.add(new ArrayList<>(caminhoAtual.subList(cicloInicio, caminhoAtual.size())));
+            return;
+        }
+
+        if (visitado[vertice]) {
+            return;
+        }
+
+        visitado[vertice] = true;
+        recStack[vertice] = true;
+        caminhoAtual.add(vertice);
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!matrizAdjacencia[vertice][i].isEmpty()) {
+                getCiclosRecursivo(i, visitado, recStack, caminhoAtual, ciclos);
+            }
+        }
+
+        // Remove o vértice atual da pilha de recursão e do caminho
+        recStack[vertice] = false;
+        caminhoAtual.remove(caminhoAtual.size() - 1);
+    }
+
+    public boolean isEuleriano() {
+        if (!isConexo()) {
+            return false;
+        }
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            int[] grau = getGrau(i);
+            if (!isDirecionado && grau[0] % 2 != 0) {
+                return false;
+            } else if (isDirecionado && grau[0] != grau[1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int[] dijkstraTodos(int verticeInicial) {
+        int[] dist = new int[numeroDeVertices];
+        boolean[] visitado = new boolean[numeroDeVertices];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, visitado);
+            visitado[u] = true;
+
+            for (int v = 0; v < numeroDeVertices; v++) {
+                if (!matrizAdjacencia[u][v].isEmpty() && !visitado[v] && dist[u] != Integer.MAX_VALUE &&
+                        dist[u] + matrizAdjacencia[u][v].get(0).getPeso() < dist[v]) {
+                    dist[v] = dist[u] + matrizAdjacencia[u][v].get(0).getPeso();
+                }
+            }
+        }
+        return dist;
     }
 
 }
