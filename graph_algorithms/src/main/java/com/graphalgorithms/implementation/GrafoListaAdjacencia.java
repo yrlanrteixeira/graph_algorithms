@@ -1,7 +1,7 @@
-package main.java.com.graphalgorithms.implementation;
+package com.graphalgorithms.implementation;
 
-import main.java.com.graphalgorithms.abstracts.GrafoAbstrato;
-import main.java.com.graphalgorithms.utils.Aresta;
+import com.graphalgorithms.abstracts.GrafoAbstrato;
+import com.graphalgorithms.utils.Aresta;
 
 import java.util.*;
 
@@ -20,6 +20,7 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
      */
     @SuppressWarnings("unchecked")
     public GrafoListaAdjacencia(int numeroDeVertices, boolean isDirecionado) {
+        super(numeroDeVertices);
         this.numeroDeVertices = numeroDeVertices;
         this.isDirecionado = isDirecionado;
         this.listaAdjacencia = new LinkedList[numeroDeVertices];
@@ -62,13 +63,17 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
     @Override
     public boolean removerAresta(int origem, int destino, int peso) {
         if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
-            // Verifica se há uma aresta entre origem e destino
+            boolean arestaRemovida = false;
+
+            // Remove a aresta da origem para o destino
             for (Aresta aresta : listaAdjacencia[origem]) {
                 if (aresta.getDestino() == destino && aresta.getPeso() == peso) {
                     listaAdjacencia[origem].remove(aresta);
+                    arestaRemovida = true;
                     break;
                 }
             }
+
             // Se o grafo não for direcionado, remove a aresta do destino para a origem
             if (!isDirecionado) {
                 for (Aresta aresta : listaAdjacencia[destino]) {
@@ -78,7 +83,8 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
                     }
                 }
             }
-            return true;
+
+            return arestaRemovida;
         }
         return false;
     }
@@ -210,8 +216,45 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
                 }
             }
         }
+        System.out.println("Lista de Adjacência: \n");
         return true;
     }
+
+    @Override
+    public int[][] floydWarshall() {
+        int[][] dist = new int[numeroDeVertices][numeroDeVertices];
+
+        // Inicializa a matriz de distâncias com os pesos das arestas
+        for (int i = 0; i < numeroDeVertices; i++) {
+            for (int j = 0; j < numeroDeVertices; j++) {
+                if (i == j) {
+                    dist[i][j] = 0; // Distância de um vértice para ele mesmo é 0
+                } else {
+                    dist[i][j] = Integer.MAX_VALUE; // Sem aresta, distância infinita
+                }
+            }
+
+            // Atualiza distâncias com os pesos das arestas
+            for (Aresta aresta : listaAdjacencia[i]) {
+                dist[i][aresta.getDestino()] = aresta.getPeso();
+            }
+        }
+
+        // Aplica o algoritmo de Floyd-Warshall
+        for (int k = 0; k < numeroDeVertices; k++) {
+            for (int i = 0; i < numeroDeVertices; i++) {
+                for (int j = 0; j < numeroDeVertices; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE
+                            && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        return dist;
+    }
+
 
     @Override
     public int getNumeroDeVertices() {
@@ -530,5 +573,138 @@ public class GrafoListaAdjacencia extends GrafoAbstrato {
             }
         }
     }
+
+
+    @Override
+    public boolean saoAdjacentes(int origem, int destino) {
+        if (origem >= 0 && destino >= 0 && origem < numeroDeVertices && destino < numeroDeVertices) {
+            for (Aresta aresta : listaAdjacencia[origem]) {
+                if (aresta.getDestino() == destino) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean temCiclo() {
+        boolean[] visitado = new boolean[numeroDeVertices];
+        boolean[] recStack = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (temCicloRecursivo(i, visitado, recStack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean temCicloRecursivo(int vertice, boolean[] visitado, boolean[] recStack) {
+        if (recStack[vertice]) {
+            return true;
+        }
+        if (visitado[vertice]) {
+            return false;
+        }
+        visitado[vertice] = true;
+        recStack[vertice] = true;
+
+        for (Aresta aresta : listaAdjacencia[vertice]) {
+            if (temCicloRecursivo(aresta.getDestino(), visitado, recStack)) {
+                return true;
+            }
+        }
+        recStack[vertice] = false;
+        return false;
+    }
+
+    public List<List<Integer>> getCiclos() {
+        List<List<Integer>> ciclos = new ArrayList<>();
+        boolean[] visitado = new boolean[numeroDeVertices];
+        boolean[] recStack = new boolean[numeroDeVertices];
+        List<Integer> caminhoAtual = new ArrayList<>();
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!visitado[i]) {
+                getCiclosRecursivo(i, visitado, recStack, caminhoAtual, ciclos);
+            }
+        }
+        return ciclos;
+    }
+
+    private void getCiclosRecursivo(int vertice, boolean[] visitado, boolean[] recStack,
+                                    List<Integer> caminhoAtual, List<List<Integer>> ciclos) {
+        if (recStack[vertice]) {
+            // Ciclo encontrado: adiciona o caminho atual ao resultado
+            int cicloInicio = caminhoAtual.indexOf(vertice);
+            ciclos.add(new ArrayList<>(caminhoAtual.subList(cicloInicio, caminhoAtual.size())));
+            return;
+        }
+
+        if (visitado[vertice]) {
+            return;
+        }
+
+        visitado[vertice] = true;
+        recStack[vertice] = true;
+        caminhoAtual.add(vertice);
+
+        for (Aresta aresta : listaAdjacencia[vertice]) {
+            getCiclosRecursivo(aresta.getDestino(), visitado, recStack, caminhoAtual, ciclos);
+        }
+
+        // Remove o vértice atual da pilha de recursão e do caminho
+        recStack[vertice] = false;
+        caminhoAtual.remove(caminhoAtual.size() - 1);
+    }
+
+    public boolean isEuleriano() {
+        if (!isConexo()) {
+            return false;
+        }
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            if (!isDirecionado && getGrau(i)[0] % 2 != 0) {
+                return false;
+            } else if (isDirecionado && getGrau(i)[0] != getGrau(i)[1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int[] dijkstraTodos(int verticeInicial) {
+        int[] dist = new int[numeroDeVertices];
+        int[] prev = new int[numeroDeVertices];
+        boolean[] mstSet = new boolean[numeroDeVertices];
+
+        for (int i = 0; i < numeroDeVertices; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            prev[i] = -1;
+            mstSet[i] = false;
+        }
+
+        dist[verticeInicial] = 0;
+
+        for (int count = 0; count < numeroDeVertices - 1; count++) {
+            int u = minDistance(dist, mstSet);
+
+            mstSet[u] = true;
+
+            for (Aresta aresta : listaAdjacencia[u]) {
+                int v = aresta.getDestino();
+                if (!mstSet[v] && aresta.getPeso() + dist[u] < dist[v]) {
+                    prev[v] = u;
+                    dist[v] = aresta.getPeso() + dist[u];
+                }
+            }
+        }
+
+        return dist;
+    }
+
+
+
+
 
 }

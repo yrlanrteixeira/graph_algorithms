@@ -1,4 +1,4 @@
-package main.java.com.graphalgorithms.utils;
+package com.graphalgorithms.utils;
 
 public class Aresta {
     public int origem;
