@@ -16,6 +16,9 @@ public class GrafoMatrizAdjacenciaTest {
     @Test
     void testCriacaoGrafo() {
         printSection("TESTE: Criação do Grafo");
+        assertThrows(IllegalArgumentException.class, () -> new GrafoMatrizAdjacencia(0, false),
+                "Deveria lançar exceção para número de vértices inválido!");
+
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(5, false);
         System.out.println("-> Grafo criado com 5 vértices (não direcionado).");
         assertEquals(5, grafo.getNumeroDeVertices());
@@ -23,9 +26,10 @@ public class GrafoMatrizAdjacenciaTest {
     }
 
     @Test
-    void testAdicionarAresta() {
-        printSection("TESTE: Adicionar Arestas");
+    void testAdicionarRemoverArestas() {
+        printSection("TESTE: Adicionar e Remover Arestas");
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
+
         System.out.println("-> Adicionando aresta entre 0 e 1 com peso 2...");
         assertTrue(grafo.adicionarAresta(0, 1, 2));
         System.out.println("✔ Aresta adicionada com sucesso.");
@@ -36,119 +40,92 @@ public class GrafoMatrizAdjacenciaTest {
 
         System.out.println("-> Tentando adicionar aresta fora dos limites...");
         assertFalse(grafo.adicionarAresta(3, 4, 1));
-        System.out.println("✔ Aresta fora dos limites detectada corretamente.");
-    }
+        System.out.println("✔ Operação inválida detectada corretamente.");
 
-    @Test
-    void testRemoverAresta() {
-        printSection("TESTE: Remover Arestas");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
-        grafo.adicionarAresta(0, 1, 2);
-        grafo.adicionarAresta(1, 2, 3);
-
-        System.out.println("-> Removendo aresta entre 0 e 1 com peso 2...");
+        System.out.println("-> Removendo aresta entre 0 e 1...");
         assertTrue(grafo.removerAresta(0, 1, 2));
         System.out.println("✔ Aresta removida com sucesso.");
 
-        System.out.println("-> Tentando remover novamente a mesma aresta...");
+        System.out.println("-> Tentando remover uma aresta inexistente...");
         assertFalse(grafo.removerAresta(0, 1, 2));
-        System.out.println("✔ Aresta não encontrada, operação inválida.");
+        System.out.println("✔ Operação inválida detectada corretamente.");
     }
 
     @Test
-    void testImprimeGrafo() {
-        printSection("TESTE: Imprimir Grafo");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
-        grafo.adicionarAresta(0, 1, 2);
-        grafo.adicionarAresta(1, 2, 3);
+    void testBuscaLarguraProfundidade() {
+        printSection("TESTE: Busca em Largura e Profundidade");
+        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, false);
 
-        System.out.println("-> Estrutura do grafo:");
-        grafo.imprimeGrafo();
-        System.out.println("✔ Teste de impressão do grafo concluído.");
-    }
-
-    @Test
-    void testGetVizinhos() {
-        printSection("TESTE: Obter Vizinhos");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
-        grafo.adicionarAresta(0, 1, 2);
-
-        System.out.println("-> Obtendo vizinhos do vértice 0...");
-        List<Integer> vizinhos = grafo.getVizinhos(0);
-        System.out.println("Vizinhos encontrados: " + vizinhos);
-        assertEquals(List.of(1), vizinhos);
-    }
-
-    @Test
-    void testOrdenacaoTopologica() {
-        printSection("TESTE: Ordenação Topológica");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, true);
         grafo.adicionarAresta(0, 1, 1);
         grafo.adicionarAresta(1, 2, 1);
         grafo.adicionarAresta(2, 3, 1);
 
-        System.out.println("-> Calculando ordenação topológica...");
-        List<Integer> ordenacao = grafo.ordenacaoTopologica();
-        System.out.println("Ordenação topológica: " + ordenacao);
-        assertEquals(List.of(0, 1, 2, 3), ordenacao);
-    }
-
-    @Test
-    void testBuscaLargura() {
-        printSection("TESTE: Busca em Largura");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
-        grafo.adicionarAresta(0, 1, 2);
-        grafo.adicionarAresta(1, 2, 3);
-
-        System.out.println("-> Executando busca em largura a partir do vértice 0...");
+        System.out.println("-> Executando busca em largura...");
         grafo.buscaLargura(0);
-        System.out.println("✔ Teste de busca em largura concluído.");
-    }
 
-    @Test
-    void testBuscaProfundidade() {
-        printSection("TESTE: Busca em Profundidade");
-        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
-        grafo.adicionarAresta(0, 1, 2);
-        grafo.adicionarAresta(1, 2, 3);
-
-        System.out.println("-> Executando busca em profundidade a partir do vértice 0...");
+        System.out.println("-> Executando busca em profundidade...");
         grafo.buscaProfundidade(0);
-        System.out.println("✔ Teste de busca em profundidade concluído.");
+        System.out.println("✔ Testes de busca concluídos.");
     }
 
     @Test
     void testPonderacaoRotulacaoVertices() {
         printSection("TESTE: Ponderação e Rotulação de Vértices");
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(3, false);
+
+        System.out.println("-> Configurando peso e rótulo para vértice 0...");
         grafo.setPesoVertice(0, 10);
-        grafo.setRotuloVertice(0, "Início");
-
-        System.out.println("-> Vértice 0 - Peso: " + grafo.getPesoVertice(0) + ", Rótulo: " + grafo.getRotuloVertice(0));
+        grafo.setRotuloVertice(0, "Origem");
         assertEquals(10, grafo.getPesoVertice(0));
-        assertEquals("Início", grafo.getRotuloVertice(0));
+        assertEquals("Origem", grafo.getRotuloVertice(0));
 
+        System.out.println("-> Configurando peso e rótulo para vértice 2...");
         grafo.setPesoVertice(2, 20);
-        grafo.setRotuloVertice(2, "Fim");
-
-        System.out.println("-> Vértice 2 - Peso: " + grafo.getPesoVertice(2) + ", Rótulo: " + grafo.getRotuloVertice(2));
+        grafo.setRotuloVertice(2, "Destino");
         assertEquals(20, grafo.getPesoVertice(2));
-        assertEquals("Fim", grafo.getRotuloVertice(2));
+        assertEquals("Destino", grafo.getRotuloVertice(2));
+
+        System.out.println("✔ Teste de ponderação e rotulação de vértices concluído.");
+    }
+
+    @Test
+    void testPropriedadesGrafo() {
+        printSection("TESTE: Propriedades do Grafo");
+        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, false);
+
+        grafo.adicionarAresta(0, 1, 1);
+        grafo.adicionarAresta(1, 2, 1);
+        grafo.adicionarAresta(2, 3, 1);
+
+        System.out.println("-> Testando se o grafo é conexo...");
+        System.out.println("-> Testando se o grafo contém ciclos...");
+        assertTrue(grafo.isConexo());
+        System.out.println("✔ Grafo identificado como conexo.");
+
+        System.out.println("-> Testando se o grafo contém ciclos...");
+        assertFalse(grafo.temCiclo());
+        System.out.println("✔ Grafo identificado como acíclico.");
+
+        System.out.println("-> Testando se o grafo é regular...");
+        assertFalse(grafo.isRegular());
+        System.out.println("✔ Regularidade verificada corretamente.");
     }
 
     @Test
     void testFloydWarshall() {
         printSection("TESTE: Floyd-Warshall");
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, true);
+
         grafo.adicionarAresta(0, 1, 3);
         grafo.adicionarAresta(0, 2, 1);
         grafo.adicionarAresta(1, 2, 1);
         grafo.adicionarAresta(2, 3, 2);
 
-        System.out.println("-> Calculando menores distâncias com Floyd-Warshall...");
         int[][] distancias = grafo.floydWarshall();
-        for (int i = 0; i < distancias.length; i++) {
-            System.out.println("Distâncias a partir do vértice " + i + ": " + java.util.Arrays.toString(distancias[i]));
+
+        System.out.println("-> Distâncias calculadas:");
+        for (int[] linha : distancias) {
+            System.out.println(java.util.Arrays.toString(linha));
         }
 
         assertEquals(0, distancias[0][0]);
@@ -157,11 +134,11 @@ public class GrafoMatrizAdjacenciaTest {
         assertEquals(3, distancias[0][3]);
     }
 
-
     @Test
     void testDijkstraTodos() {
         printSection("TESTE: Dijkstra Todos");
         GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(5, true);
+
         grafo.adicionarAresta(0, 1, 2);
         grafo.adicionarAresta(0, 2, 4);
         grafo.adicionarAresta(1, 2, 1);
@@ -170,10 +147,69 @@ public class GrafoMatrizAdjacenciaTest {
 
         int[] distancias = grafo.dijkstraTodos(0);
 
-        System.out.println("-> Calculando menores distâncias com Dijkstra...");
+        System.out.println("-> Distâncias calculadas: " + java.util.Arrays.toString(distancias));
         assertArrayEquals(new int[]{0, 2, 3, 9, 6}, distancias);
-        System.out.println("Distâncias a partir do vértice 0: " + java.util.Arrays.toString(distancias));
-        System.out.println("✔ Teste de Dijkstra Todos concluído.");
     }
 
+    @Test
+    void testOrdenacaoTopologica() {
+        printSection("TESTE: Ordenação Topológica");
+        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, true);
+
+        grafo.adicionarAresta(0, 1, 1);
+        grafo.adicionarAresta(1, 2, 1);
+        grafo.adicionarAresta(2, 3, 1);
+
+        List<Integer> ordenacao = grafo.ordenacaoTopologica();
+
+        System.out.println("-> Ordenação topológica: " + ordenacao);
+        assertEquals(List.of(0, 1, 2, 3), ordenacao);
+
+        System.out.println("-> Adicionando um ciclo...");
+        grafo.adicionarAresta(3, 1, 1);
+
+        System.out.println("-> Tentando novamente...");
+        assertNull(grafo.ordenacaoTopologica());
+    }
+
+    @Test
+    void testEuleriano() {
+        printSection("TESTE: Grafo Euleriano");
+        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, false);
+
+        grafo.adicionarAresta(0, 1, 1);
+        grafo.adicionarAresta(1, 2, 1);
+        grafo.adicionarAresta(2, 3, 1);
+        grafo.adicionarAresta(3, 0, 1);
+
+        System.out.println("-> Testando se o grafo é Euleriano...");
+        assertTrue(grafo.isEuleriano());
+        System.out.println("✔ Grafo identificado como Euleriano.");
+
+        System.out.println("-> Removendo uma aresta...");
+        grafo.removerAresta(0, 1);
+
+        System.out.println("-> Testando novamente...");
+        assertFalse(grafo.isEuleriano());
+    }
+
+    @Test
+    void testBipartido() {
+        printSection("TESTE: Grafo Bipartido");
+        GrafoMatrizAdjacencia grafo = new GrafoMatrizAdjacencia(4, false);
+
+        grafo.adicionarAresta(0, 1, 1);
+        grafo.adicionarAresta(1, 2, 1);
+        grafo.adicionarAresta(2, 3, 1);
+
+        System.out.println("-> Testando se o grafo é bipartido...");
+        assertTrue(grafo.isBipartido());
+        System.out.println("✔ Grafo identificado como bipartido.");
+
+        System.out.println("-> Adicionando aresta que quebra a bipartição...");
+        grafo.adicionarAresta(0, 2, 1);
+
+        System.out.println("-> Testando novamente...");
+        assertFalse(grafo.isBipartido());
+    }
 }

@@ -11,7 +11,6 @@ public abstract class GrafoAbstrato implements Grafo {
     protected final String[] rotulosVertices;
     public abstract int[][] floydWarshall();
 
-
     /**
      * Construtor para inicializar os atributos comuns do grafo abstrato.
      *

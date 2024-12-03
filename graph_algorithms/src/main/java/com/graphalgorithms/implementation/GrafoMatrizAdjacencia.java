@@ -8,7 +8,6 @@ import java.util.*;
 public class GrafoMatrizAdjacencia extends GrafoAbstrato {
     private final int numeroDeVertices;
     private final boolean isDirecionado;
-
     private final List<Aresta>[][] matrizAdjacencia;
 
     public GrafoMatrizAdjacencia(int numeroDeVertices, boolean isDirecionado) {
@@ -541,36 +540,29 @@ public class GrafoMatrizAdjacencia extends GrafoAbstrato {
 
     public boolean temCiclo() {
         boolean[] visitado = new boolean[numeroDeVertices];
-        boolean[] recStack = new boolean[numeroDeVertices];
 
         for (int i = 0; i < numeroDeVertices; i++) {
-            if (temCicloRecursivo(i, visitado, recStack)) {
+            if (!visitado[i] && temCicloRecursivo(i, visitado, -1)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean temCicloRecursivo(int vertice, boolean[] visitado, boolean[] recStack) {
-        if (recStack[vertice]) {
-            return true;
-        }
-        if (visitado[vertice]) {
-            return false;
-        }
+    private boolean temCicloRecursivo(int vertice, boolean[] visitado, int pai) {
         visitado[vertice] = true;
-        recStack[vertice] = true;
 
-        // Itera sobre os possíveis destinos do vértice atual na matriz de adjacência
         for (int i = 0; i < numeroDeVertices; i++) {
-            // Se houver uma aresta (peso maior que zero) entre `vertice` e `i`
             if (!matrizAdjacencia[vertice][i].isEmpty()) {
-                if (temCicloRecursivo(i, visitado, recStack)) {
+                if (!visitado[i]) {
+                    if (temCicloRecursivo(i, visitado, vertice)) {
+                        return true;
+                    }
+                } else if (i != pai) {
                     return true;
                 }
             }
         }
-        recStack[vertice] = false;
         return false;
     }
 
