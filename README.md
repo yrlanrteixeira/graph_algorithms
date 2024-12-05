@@ -92,3 +92,7 @@ predecessores, grau de um vértice, informações do grafo (Simples, regular, co
 
 23. **Sair:**
  - Encerra a execução do programa.
+## Autores 
+- Ramom
+ - Yrlan
+ - Hugo
